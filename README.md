@@ -1,7 +1,7 @@
 ball_of_light
 =============
 
-This project 
+[![Build Status](https://secure.travis-ci.org/marshally/ball_of_light.png?branch=master)](http://travis-ci.org/marshally/ball_of_light)
 
 Goals
 -----
@@ -18,7 +18,7 @@ Hardware required
   1. USB 1.0 cable
   1. 1x XLR 5-pin to XLR 3 pin
   2. 11x XLR 3-pin male to XLR 3-pin female
-  
+
 Software Installation
 ---------------------
 ````
@@ -30,16 +30,16 @@ Hardware Installation
 ---------------------
 1. plug in MS Kinect
   * check that Kinect is operational
-  * `ball of light kinect:test`
+  * `ball_of_light kinect:test`
 1. plug in DMX USB Pro
   1. configure DMX port
     * `ball_of_light configure:ports`
 1. Daisy chain connect all of the lights together
 1. Set each light to a unique DMX control number, offset by 5
   * e.g. 1,6,11,16,21,26,31,36,41,46,51,56
-  * `ball of light lights:list`
+  * `ball_of_light lights:list`
 1. check that lights are operational with
-  * `ball of light lights:test`
+  * `ball_of_light lights:test`
 
 
 Calibration
