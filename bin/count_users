@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+require 'json'
+cmd = "kinectable_pipe"
+
+last = 0
+puts 0
+IO.popen(cmd) do |f|
+  while line = f.readline
+    begin
+      blob = JSON.parse(line)
+      if blob["skeletons"]
+        if blob["skeletons"].count != last
+          puts last = blob["skeletons"].count
+        end
+      end
+    rescue JSON::ParserError
+    end
+  end
+end

@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+while(script = STDIN.gets) do
+  script.strip!
+  f = "./scripts/#{script}.rb"
+  if File.exists?(f)
+    puts `ruby #{f}`
+  end
+end

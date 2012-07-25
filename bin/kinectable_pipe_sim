@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'json'
+
+while(1) do
+  start = Time.now
+  File.open("/Users/marshallyount/Projects/kinectable_pipe/samples/test001.txt").each do |line|
+    begin
+      data = JSON.parse(line)
+      target_time = start + data["elapsed"]
+      timediff = target_time - Time.now
+      sleep(timediff) if timediff > 0
+      puts data.to_json
+    rescue JSON::ParserError
+    end
+  end
+end
