@@ -1,13 +1,15 @@
 #!/usr/bin/env ruby
-require 'rubygems'
+require 'bundler'
+Bundler.setup
+
 require 'thor'
 
-class BallOfLight < Thor
+require_relative '../lib/ball_of_light'
 
-  desc "foo", "Prints foo"
-  def foo
-    puts "foo"
-  end
+# Hey you: reader of this code!
+# This is a hacktastic mess.
+module BallOfLight
+  class CLI < Thor
     desc "test", "runs tests (specify with --only kinect dmx ola)"
     method_option :only, :aliases => "--only", :desc => "component to test, e.g. -s kinect dmx ola"
     def test
@@ -45,6 +47,11 @@ class BallOfLight < Thor
       end
     end
 
+    desc "center", "center all dmx lights"
+    def center
+      b = BallOfLight::BallOfLightController.new(:cmd => "xargs -n1 echo")
+      b.instant!(:point => :center)
+    end
 
     no_tasks do
       def usb_drivers
@@ -118,4 +125,4 @@ class BallOfLight < Thor
   end
 end
 
-BallOfLight.start
+BallOfLight::CLI.start
