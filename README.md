@@ -21,25 +21,36 @@ Hardware required
 
 Software Installation
 ---------------------
-````
-brew tap marshally/homebrew-alt
-brew install ball_of_light
-````
+1. Install Homebrew packages
+
+    ````
+    brew tap marshally/homebrew-alt
+    brew install ball_of_light
+    ````
+
+2. Install DMX USB Pro drivers
+
+    [http://www.ftdichip.com/Drivers/VCP.htm](http://www.ftdichip.com/Drivers/VCP.htm)
+
 
 Hardware Installation
 ---------------------
 1. plug in MS Kinect
   * check that Kinect is operational
-  * `ball_of_light kinect:test`
+  * `ball_of_light test --only kinect`
 1. plug in DMX USB Pro
-  1. configure DMX port
-    * `ball_of_light configure:ports`
+  1. check that the DMX USB Pro is operational
+    * `ball_of_light test --only dmx`
+  1. configure DMX ports
+    * `ball_of_light configure`
+  1. check that the Open Lighting Architecture system is operational
+    * `ball_of_light test --only ola`
 1. Daisy chain connect all of the lights together
 1. Set each light to a unique DMX control number, offset by 5
   * e.g. 1,6,11,16,21,26,31,36,41,46,51,56
-  * `ball_of_light lights:list`
+  * `ball_of_light lights --list`
 1. check that lights are operational with
-  * `ball_of_light lights:test`
+  * `ball_of_light lights --center`
 
 
 Calibration
