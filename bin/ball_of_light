@@ -47,10 +47,10 @@ module BallOfLight
       end
     end
 
-    desc "center", "center all dmx lights"
-    def center
-      b = BallOfLight::BallOfLightController.new(:cmd => "xargs -n1 echo")
-      b.instant!(:point => :center)
+    desc "lights", "control DMX lights"
+    method_option :center, :type => :boolean, :defaults => true
+    def lights
+      center if options[:center]
     end
 
     no_tasks do
@@ -121,6 +121,15 @@ module BallOfLight
           end
         end
       end
+
+      def center
+        controller.instant!(:point => :center)
+      end
+
+      def controller
+        @controller ||= BallOfLight::BallOfLightController.new(:cmd => "xargs -n1 echo")
+      end
+
     end
   end
 end
