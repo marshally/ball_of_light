@@ -6,7 +6,7 @@ module BallOfLight
       super
       count = options[:count] || 12
       count.times do |i|
-        self.devices << OpenLighting::Devices::ComscanLed
+        self << OpenLighting::Devices::ComscanLed.new
       end
     end
   end
