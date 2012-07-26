@@ -8,7 +8,67 @@ class BallOfLight < Thor
   def foo
     puts "foo"
   end
+    desc "test", "runs tests (specify with --only kinect dmx ola)"
+    method_option :only, :aliases => "--only", :desc => "component to test, e.g. -s kinect dmx ola"
+    def test
+      case options[:only]
+      when "kinect"
+        test_kinect
+      when "dmx"
+        test_usbpro
+      when "ola"
+        test_ola
+      when nil
+        test_kinect
+        test_usbpro
+        test_ola
+      else
+        puts "Invalid --only. Values"
+      end
+    end
 
+
+    no_tasks do
+      def usb_drivers
+        Dir["/dev/cu.usb*"]
+      end
+
+      def test_kinect
+        puts "Testing the MS Kinect"
+        cmd = "kinectable_pipe"
+        unless `which #{cmd}`.include? cmd
+          puts "ERROR: It looks like #{cmd} has not been installed (or is not on your PATH). Try:"
+          puts "\n  brew install #{cmd}"
+        else
+          # HACK
+          pipe = IO.popen(cmd, "r")
+          unless pipe.gets.include? "initializing"
+            puts "unknown error with kinect"
+          end
+          if pipe.gets.include? "problem initializing kinect"
+            puts "ERROR: problem initializing kinect. Is it plugged in?"
+          end
+          pipe.close
+        end
+      end
+
+      def test_usbpro
+        puts "Testing the DMX USB Pro"
+        case usb_drivers.count
+        when 0
+          puts "I can't find your DMX USB Pro. Have you installed the drivers from:"
+          puts "  http://www.ftdichip.com/Drivers/VCP.htm"
+        when 1
+        else
+          puts "I found more than one DMX USB Pro device. I'm not sure what to do from here?"
+        end
+      end
+
+      def test_ola
+        puts "Testing OLA"
+        raise NotImplementedError
+      end
+  end
 end
 
 BallOfLight.start
