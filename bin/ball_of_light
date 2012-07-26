@@ -94,33 +94,33 @@ module BallOfLight
         raise NotImplementedError
       end
 
-    def config_ola_flexible
-      flexible = "
-  device_dir = /dev
-  device_prefix = ttyUSB
-  device_prefix = cu.usbserial-"
-      `mkdir -p ~/.ola`
-      `echo '#{flexible}' > ~/.ola/ola-usbpro.conf`
-    end
+      def config_ola_flexible
+        flexible = "
+    device_dir = /dev
+    device_prefix = ttyUSB
+    device_prefix = cu.usbserial-"
+        `mkdir -p ~/.ola`
+        `echo '#{flexible}' > ~/.ola/ola-usbpro.conf`
+      end
 
-    def config_ola_fixed
-      fixed = "device = #{usb_devices.first}"
-      `mkdir -p ~/.ola`
-      `echo '#{fixed}' > ~/.ola/ola-usbpro.conf`
-    end
+      def config_ola_fixed
+        fixed = "device = #{usb_devices.first}"
+        `mkdir -p ~/.ola`
+        `echo '#{fixed}' > ~/.ola/ola-usbpro.conf`
+      end
 
-    def disable_unused_ola_devices
-      confs = ['artnet', 'e131', 'opendmx', 'shownet', 'dummy', 'espnet', 'pathport',
-        'sandnet', 'stageprofi', 'usbdmx', 'usbserial']
+      def disable_unused_ola_devices
+        confs = ['artnet', 'e131', 'opendmx', 'shownet', 'dummy', 'espnet', 'pathport',
+          'sandnet', 'stageprofi', 'usbdmx', 'usbserial']
 
-      confs.each do |conf|
-        file = "~/.ola/ola-#{conf}.conf"
-        unless `cat #{file}`.include? "enabled"
-          puts "disabling #{file}"
-          `echo 'enabled = false' >> #{file}`
+        confs.each do |conf|
+          file = "~/.ola/ola-#{conf}.conf"
+          unless `cat #{file}`.include? "enabled"
+            puts "disabling #{file}"
+            `echo 'enabled = false' >> #{file}`
+          end
         end
       end
-    end
     end
   end
 end
