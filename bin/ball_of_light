@@ -48,8 +48,10 @@ module BallOfLight
     end
 
     desc "lights", "control DMX lights"
+    method_option :list, :type => :boolean, :defaults => true
     method_option :center, :type => :boolean, :defaults => true
     def lights
+      list_lights if options[:list]
       center if options[:center]
     end
 
@@ -124,6 +126,10 @@ module BallOfLight
 
       def center
         controller.instant!(:point => :center)
+      end
+
+      def list_lights
+        puts controller.devices.map{|d| d.start_address }.inspect
       end
 
       def controller
