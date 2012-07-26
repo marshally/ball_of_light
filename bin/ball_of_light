@@ -27,6 +27,24 @@ class BallOfLight < Thor
       end
     end
 
+    desc "configure", "configures subsystems"
+    method_option :flexible, :type => :boolean, :defaults => false, :desc => "Use flexible OLA configuration file (default: false)", :banner => "false"
+    method_option :usbpro_conf, :type => :boolean, :defaults => true, :desc => "Write a new DMX USB Pro conf file (default: true)", :banner => true
+    method_option :disable_unused_devices, :type => :boolean, :defaults => true, :desc => "Disables all OLA devices except DMX USB Pro (default: true)", :banner => true
+    def configure
+      if options[:usbpro_conf]
+        if options[:flexible]
+          config_ola_flexible
+        else
+          config_ola_fixed
+        end
+      end
+
+      if options[:disable_unused_devices]
+        disable_unused_ola_devices
+      end
+    end
+
 
     no_tasks do
       def usb_drivers
@@ -68,6 +86,35 @@ class BallOfLight < Thor
         puts "Testing OLA"
         raise NotImplementedError
       end
+
+    def config_ola_flexible
+      flexible = "
+  device_dir = /dev
+  device_prefix = ttyUSB
+  device_prefix = cu.usbserial-"
+      `mkdir -p ~/.ola`
+      `echo '#{flexible}' > ~/.ola/ola-usbpro.conf`
+    end
+
+    def config_ola_fixed
+      fixed = "device = #{usb_devices.first}"
+      `mkdir -p ~/.ola`
+      `echo '#{fixed}' > ~/.ola/ola-usbpro.conf`
+    end
+
+    def disable_unused_ola_devices
+      confs = ['artnet', 'e131', 'opendmx', 'shownet', 'dummy', 'espnet', 'pathport',
+        'sandnet', 'stageprofi', 'usbdmx', 'usbserial']
+
+      confs.each do |conf|
+        file = "~/.ola/ola-#{conf}.conf"
+        unless `cat #{file}`.include? "enabled"
+          puts "disabling #{file}"
+          `echo 'enabled = false' >> #{file}`
+        end
+      end
+    end
+    end
   end
 end
 
