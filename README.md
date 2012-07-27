@@ -13,6 +13,7 @@ Yeah, yeah. Just show me the code.
 Here's a simple script that connects to the DMX controller, centers and turns on
 the lights, and then cycles through the colors every 5 seconds.
 
+    ```ruby
     #!/usr/bin/env ruby
     require 'bundler'
     Bundler.setup
@@ -52,6 +53,7 @@ the lights, and then cycles through the colors every 5 seconds.
       controller.instant!(:point => color)
       sleep(0.5)
     end
+    ```
 
 ## Installation
 
