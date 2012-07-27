@@ -59,12 +59,9 @@ the lights, and then cycles through the colors every 5 seconds.
 
 1. DMX USB Pro
 1. Mac running OSX (Lion preferred)
-
     * homebrew package manager
     * DMX USB Pro drivers install
-
 1. Cables
-
     * USB 1.0 cable
     * 1x XLR 5-pin to XLR 3 pin
     * 11x XLR 3-pin male to XLR 3-pin female
@@ -78,9 +75,7 @@ the lights, and then cycles through the colors every 5 seconds.
     brew install ball_of_light
     ````
 
-2. Install DMX USB Pro drivers
-
-    * [http://www.ftdichip.com/Drivers/VCP.htm](http://www.ftdichip.com/Drivers/VCP.htm)
+2. Install DMX USB Pro drivers from [http://www.ftdichip.com/Drivers/VCP.htm](http://www.ftdichip.com/Drivers/VCP.htm)
 
 
 ### Hardware Installation
@@ -109,45 +104,4 @@ the lights, and then cycles through the colors every 5 seconds.
 ball_of_light calibrate
 ````
 
-This will begin the `ball_of_light` test sequence. There are 9 or more calibration points per light, so this will take between 15m and 1h for 12 lights. Depending on how quickly you move :)
-
-Procedure
-
-````
-> ball_of_light calibrate
-Acquiring user...
-Found!
-Would you like to calibrate a (S)ingle light or (A)ll lights?
-How many lights are you calibrating? press <Enter> for 12, or enter a number
-Calibrating Light #1
-(all other lights have been turned off)
-Tracking ...
-L1/Position #1: Press <Enter> when the subject is standing in the middle of the light, or <ESC> if this point is not reachable.
-L1/Position #1: Captured!
-Adjusting light ...
-L1/Position #2: Press <Enter> when the subject is standing in the middle of the light, or <ESC> if this point is not reachable.
-L1/Position #2: Captured!
-...
-Captured light positions are saved in `~/.ball_of_light/calibration/1.json`
-````
-
-(until points for all twelve lights have been captured)
-
-foreach (light in lights)
-{
-  lights.all
-  while (needsPosition)
-  {
-    [0, 127, 255].each do |tilt|
-      [0, 127, 255].each do |pan|
-        light.send(:tilt => tilt, :pan => :pan)
-        capture
-      end
-    end
-    tilt = 127
-    [63, 191].each do |pan|
-      light.send(:tilt => tilt, :pan => :pan)
-      capture
-    end
-  }
-}
+This will begin the `ball_of_light` test sequence. There are 9 or more calibration points per light, so this will take between 15m and 1h for 12 lights. Depending on how quickly you move.
