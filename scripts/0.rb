@@ -7,17 +7,28 @@ require_relative '../lib/ball_of_light'
 # This script is for:
 # If no one is in the field
 
+options = {}
+if ENV['TEST']
+  options.merge!(:cmd => "xargs -n1 echo")
+end
+
 # setup controller
-controller = BallOfLight::BallOfLightController.new #(:cmd => "xargs -n1 echo")
+controller = BallOfLight::BallOfLightController.new(options)
 
 # Send the exact same command to all lights for this series:
 # Point toward the center for 30 seconds.
 
-controller.center # you can call named points as if they are methods
+# This command turns the light on
 controller.set(:dimmer => 255)
+controller.set(:pan => 127, :tilt => 127)
+controller.set(:point => :center)
+controller.center # you can call named points as if they are methods. This queues up the command
 controller.write! # this sends whatever is in the buffer
 
+controller.nocolor! # this sends the named point instantly
+
 # Cycle through each color with .5 sec/color.
+controller.bottom!
 
 [:yellow, :red, :green, :blue, :teardrop, :polka, :teal, :rings].each do |color|
   controller.instant!(:point => color)
@@ -29,7 +40,8 @@ controller.set(:gobo => 0) #nocolor # turn the color off first
 
 # Strobe for a second and point at the ground
 controller.strobe_fast
-controller.instant!(:tilt => 80)
+controller.bottom!
+# or controller.instant!(:tilt => 80)
 
 # Have all lights sweep slowly back and forth for 30 sec, cycling through the colors. The lights have a greater range in one axis, so sweep in that direction. Return to center when complete.
 3.times do
