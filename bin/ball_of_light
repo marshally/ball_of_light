@@ -3,6 +3,8 @@ require 'bundler'
 Bundler.setup
 
 require 'thor'
+require 'json'
+require 'io/console'
 
 require_relative '../lib/ball_of_light'
 
@@ -53,6 +55,59 @@ module BallOfLight
     def lights
       list_lights if options[:list]
       center if options[:center]
+    end
+
+    desc "calibrate", "calibrate named points"
+    def calibrate
+
+      controller.center!
+      controller.strobe_open!
+      controller.off!
+
+      points = nil
+      points = BallOfLightController.additional_points
+
+      name = ask("What is the name of your point?")
+
+      while(1) do
+        answer = ask("Which light to calibrate? [1-12, or (q)uit]")
+        break if ["q", "quit"].include? answer
+
+        number = answer.to_i
+        points[number-1] ||= {}
+        points[number-1][name] = {}
+
+        controller.set(:dimmer => 0)
+        controller.devices[number-1].set(:dimmer => 255)
+        controller.write!
+
+        say "Press (a/d) to pan and (w/s) to tilt. <space> to save or (q)uit"
+
+        pan, tilt = 127, 127
+
+        while(char = STDIN.getch)
+          case char.downcase
+          when "a"
+            pan = [pan-1, 0].max
+          when "d"
+            pan = [pan+1, 255].min
+          when "w"
+            tilt = [tilt+1, 255].min
+          when "s"
+            tilt = [tilt-1, 0].max
+          when "q"
+            break
+          when " "
+            points[number-1][name] = {:pan => pan, :tilt => tilt}
+            BallOfLightController.write_points points
+            break
+          else
+          end
+
+          controller.devices[number-1].set(:pan => pan, :tilt => tilt)
+          controller.write!
+        end
+      end
     end
 
     no_tasks do
