@@ -52,6 +52,7 @@ module BallOfLight
     desc "lights", "control DMX lights"
     method_option :list, :type => :boolean, :defaults => true
     method_option :center, :type => :boolean, :defaults => true
+    method_option :testing, :type => :boolean, :defaults => true
     def lights
       list_lights if options[:list]
       center if options[:center]
@@ -188,7 +189,11 @@ module BallOfLight
       end
 
       def controller
-        @controller ||= BallOfLight::BallOfLightController.new(:cmd => "xargs -n1 echo")
+        params = {}
+        if options[:testing]
+          params.merge!(:cmd => "xargs -n1 echo")
+        end
+        @controller ||= BallOfLight::BallOfLightController.new params
       end
 
     end
