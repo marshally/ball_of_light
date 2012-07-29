@@ -56,6 +56,16 @@ module BallOfLight
       center if options[:center]
     end
 
+    desc "capabilities", "display the lights basic capabilities"
+    def capabilities
+      say controller.capabilities
+    end
+
+    desc "points", "display the named points"
+    def points
+      say controller.points
+    end
+
     desc "calibrate", "calibrate named points"
     def calibrate
 
