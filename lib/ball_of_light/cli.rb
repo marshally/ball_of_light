@@ -41,6 +41,10 @@ module BallOfLight
       if options[:disable_unused_devices]
         disable_unused_ola_devices
       end
+
+      say "Open http://localhost:9090"
+      say "create a universe with id=1"
+      say "Add the DMX USB Pro output port to it"
     end
 
     desc "lights", "control DMX lights"
@@ -172,8 +176,9 @@ module BallOfLight
       end
 
       def disable_unused_ola_devices
-        confs = ['artnet', 'e131', 'opendmx', 'shownet', 'dummy', 'espnet', 'pathport',
-          'sandnet', 'stageprofi', 'usbdmx', 'usbserial']
+        kill_olad
+        confs = ['artnet', 'e131', 'shownet', 'dummy', 'espnet', 'pathport',
+          'sandnet', 'stageprofi', 'usbdmx', 'usbserial'] # 'opendmx',
 
         confs.each do |conf|
           file = "~/.ola/ola-#{conf}.conf"
@@ -182,6 +187,11 @@ module BallOfLight
             append_file file, 'enabled = false'
           end
         end
+      end
+
+      def kill_olad
+        pid = `ps aux| grep olad | grep -v grep`.split(/\s+/)[1]
+        `kill -9 #{pid}` if pid
       end
 
       def center
