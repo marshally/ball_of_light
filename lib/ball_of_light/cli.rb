@@ -76,8 +76,8 @@ module BallOfLight
         points[number-1] ||= {}
         points[number-1][name] = {}
 
-        controller.set(:dimmer => 0)
-        controller.devices[number-1].set(:dimmer => 255)
+        controller.buffer(:dimmer => 0)
+        controller.devices[number-1].buffer(:dimmer => 255)
         controller.write!
 
         say "Press (a/d) to pan and (w/s) to tilt. <space> to save or (q)uit"
@@ -103,7 +103,7 @@ module BallOfLight
           else
           end
 
-          controller.devices[number-1].set(:pan => pan, :tilt => tilt)
+          controller.devices[number-1].buffer(:pan => pan, :tilt => tilt)
           controller.write!
         end
       end
