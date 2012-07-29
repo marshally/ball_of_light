@@ -147,14 +147,14 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
     1. check that the Open Lighting Architecture system is operational
         * `ball_of_light test --only ola`
 3. Open up the OLA admin console at 'http://localhost:9090/'
-    ![OLA Console](https://www.evernote.com/shard/s4/sh/7cab05a5-ee37-4a4d-9d44-66178799788c/eb9fbc3ce9652f5b35eaa494059a8dfd/res/709227d0-5200-451c-92c2-bc0253947eb9/OLA_Admin-20120729-094223.jpg.jpg)
+    ![OLA Console](http://www.evernote.com/shard/s4/sh/7cab05a5-ee37-4a4d-9d44-66178799788c/eb9fbc3ce9652f5b35eaa494059a8dfd/res/709227d0-5200-451c-92c2-bc0253947eb9/OLA_Admin-20120729-094223.jpg.jpg)
 4. Add a new universe
     * universe id=1
     * universe name=BALL_OF_LIGHT
     * select Open DMX Pro OUTPUT
     * click Add Universe (scroll to bottom)
 
-    ![Add Universe](https://www.evernote.com/shard/s4/sh/30e3d8d7-1d03-43b2-a3c3-2a9a75b3d20e/a12ae86aaea495bb4e967d6945221a09/res/b1d1e161-f2e0-47fd-b9a9-eded1b7043ac/OLA_Admin-20120729-095105.jpg.jpg)
+    ![Add Universe](http://www.evernote.com/shard/s4/sh/30e3d8d7-1d03-43b2-a3c3-2a9a75b3d20e/a12ae86aaea495bb4e967d6945221a09/res/b1d1e161-f2e0-47fd-b9a9-eded1b7043ac/OLA_Admin-20120729-095105.jpg.jpg)
 1. Daisy chain connect all of the lights together
 1. Set each light to a unique DMX control number, offset by 5
     * e.g. 1,6,11,16,21,26,31,36,41,46,51,56
