@@ -126,10 +126,26 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
 
 1. Install Homebrew packages
 
-    ````
+    ```bash
     brew tap marshally/homebrew-alt
     brew install ball_of_light
     ````
+
+1. Install ruby 1.9.3, if you don't have it already
+
+    ```bash
+    brew install rbenv
+    brew install ruby-build
+    rbenv install 1.9.3-p194
+    rbenv rehash
+    ```
+
+1. install ball_of_light excitements
+    ```bash
+    git clone https://github.com/marshally/ball_of_light
+    cd ball_of_light
+    bundle install --path vendor/bundle --deployment
+    ```
 
 2. Install DMX USB Pro drivers from [http://www.ftdichip.com/Drivers/VCP.htm](http://www.ftdichip.com/Drivers/VCP.htm)
 
@@ -138,15 +154,31 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
 
 1. plug in MS Kinect
     * check that Kinect is operational
-    * `ball_of_light test --only kinect`
+
+        ```bash
+        ball_of_light test --only kinect
+        ```
+
 1. plug in DMX USB Pro
     1. check that the DMX USB Pro is operational
-        * `ball_of_light test --only dmx`
+
+        ```bash
+        ball_of_light test --only dmx
+        ```
+
     1. configure DMX ports
-        * `ball_of_light configure`
+
+        ```bash
+        ball_of_light configure
+        ```
+
     1. check that the Open Lighting Architecture system is operational
-        * `ball_of_light test --only ola`
-3. Open up the OLA admin console at 'http://localhost:9090/'
+
+        ```bash
+        ball_of_light test --only ola
+        ```
+
+3. Open up the OLA admin console at '[http://localhost:9090/](http://localhost:9090/)'
 
     ![OLA Console](http://marshally.github.com/ball_of_light/OLA_Admin_one.jpg)
 
@@ -160,16 +192,27 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
 1. Daisy chain connect all of the lights together
 1. Set each light to a unique DMX control number, offset by 5
     * e.g. 1,6,11,16,21,26,31,36,41,46,51,56
-    * `ball_of_light lights --list`
+
+    ```bash
+    ball_of_light lights --list
+    ```
+
 1. check that lights are operational with
-    * `ball_of_light lights --center`
+
+    ```bash
+    ball_of_light lights --center
+    ```
+
 1. what to see the raw commands that the lights are executing? pass in --testing
-    * `ball_of_light lights --center --testing`
+
+    ```bash
+    ball_of_light lights --center --testing
+    ```
 
 ### Calibration
 
-````
+```bash
 ball_of_light calibrate
-````
+```
 
 This will begin the `ball_of_light` test sequence. There are 9 or more calibration points per light, so this will take between 15m and 1h for 12 lights. Depending on how quickly you move.
