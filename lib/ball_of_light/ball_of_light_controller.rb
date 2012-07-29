@@ -1,4 +1,5 @@
 require 'open_lighting'
+require 'json'
 
 module BallOfLight
   class BallOfLightController < OpenLighting::DmxController
