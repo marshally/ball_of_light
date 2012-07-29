@@ -147,14 +147,16 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
     1. check that the Open Lighting Architecture system is operational
         * `ball_of_light test --only ola`
 3. Open up the OLA admin console at 'http://localhost:9090/'
-    ![OLA Console](OLA_Admin_configure_universe.jpg)
+
+    ![OLA Console](http://marshally.github.com/ball_of_light/OLA_Admin_configure_universe.jpg)
+
 4. Add a new universe
     * universe id=1
     * universe name=BALL_OF_LIGHT
     * select Open DMX Pro OUTPUT
     * click Add Universe (scroll to bottom)
 
-    ![Add Universe](OLA_Admin_one.jpg)
+    ![Add Universe](http://marshally.github.com/ball_of_light/OLA_Admin_one.jpg)
 1. Daisy chain connect all of the lights together
 1. Set each light to a unique DMX control number, offset by 5
     * e.g. 1,6,11,16,21,26,31,36,41,46,51,56
