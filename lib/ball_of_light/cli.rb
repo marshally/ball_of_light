@@ -9,6 +9,15 @@ module BallOfLight
   class CLI < Thor
     include Thor::Actions
 
+    desc "link", "symlinks executeable to /usr/local/bin"
+    def link
+      # TODO: find out why remove_file doesn't work here. grrrrr
+      # remove_file "/usr/local/bin/ball_of_light"
+      `rm /usr/local/bin/ball_of_light`
+      chmod "#{Dir.pwd}/bin/ball_of_light", 0777
+      create_link "/usr/local/bin/ball_of_light", "#{Dir.pwd}/bin/ball_of_light", :force => true
+    end
+
     desc "test", "runs tests (specify with --only kinect dmx ola)"
     method_option :only, :aliases => "--only", :desc => "component to test, e.g. -s kinect dmx ola"
     def test

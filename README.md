@@ -145,6 +145,7 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
     git clone https://github.com/marshally/ball_of_light
     cd ball_of_light
     bundle install --path vendor/bundle --deployment
+    bin/ball_of_light link
     ```
 
 2. Install DMX USB Pro drivers from [http://www.ftdichip.com/Drivers/VCP.htm](http://www.ftdichip.com/Drivers/VCP.htm)
