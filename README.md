@@ -110,7 +110,7 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
 
 ## Installation
 
-### Hardware required
+### Installation: Hardware required
 
 1. DMX USB Pro
 1. Mac running OSX (Lion preferred)
@@ -133,7 +133,7 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
     * 1x XLR 5-pin to XLR 3 pin
     * 11x XLR 3-pin male to XLR 3-pin female
 
-### Software Installation
+### Installation: Software Installation
 
 1. Install Homebrew packages
 
@@ -142,6 +142,8 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
     brew tap marshally/homebrew-alt
     brew install ball_of_light
     ````
+    
+    * see Troubleshooting section below if you get errors
 
 1. Install ruby 1.9.3, if you don't have it already
 
@@ -164,7 +166,7 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
 2. Install DMX USB Pro drivers from [http://www.ftdichip.com/Drivers/VCP.htm](http://www.ftdichip.com/Drivers/VCP.htm)
 
 
-### Hardware Installation
+### Installation: Hardware Installation
 
 1. plug in MS Kinect
     * check that Kinect is operational
@@ -223,7 +225,18 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
     ball_of_light lights --center --testing
     ```
 
-### Calibration
+### Installation: Troubleshooting
+
+If you are having trouble installing pkg-config-2.7 you can cheat with these commands:
+
+    ```bash
+    brew install wget
+    rm /usr/local/Library/Formula/pkg-config.rb
+    wget  https://raw.github.com/mxcl/homebrew/63415cccaecf9cccf204570ea2242b56ce0ffdc4/Library/Formula/pkg-config.rb /usr/local/Library/Formula/
+    brew install ball_of_light
+    ```
+
+## Calibration
 
 ```bash
 ball_of_light calibrate
