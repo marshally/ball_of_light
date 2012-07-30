@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Ball of light by marshally</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Ball of light</h1>
+        <h2></h2>
+        <a href="https://github.com/marshally/ball_of_light" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>ball_of_light</h1>
+
+<p><a href="http://travis-ci.org/marshally/ball_of_light"><img src="https://secure.travis-ci.org/marshally/ball_of_light.png?branch=master" alt="Build Status"></a></p>
+
+<h2>Project Goals</h2>
+
+<p>Create an light show based on the movements of participants, with data gathered by a Microsoft Kinect. See <a href="http://balloflight.com">the Ball of Light</a></p>
+
+<h2>Example</h2>
+
+<p>Yeah, yeah. Just show me the code.</p>
+
+<p>Here's a simple script that connects to the DMX controller, centers and turns on
+the lights, and then cycles through the colors every 5 seconds.</p>
+
+<div class="highlight"><pre><span class="c1">#!/usr/bin/env ruby</span>
+<span class="nb">require</span> <span class="s1">'bundler'</span>
+<span class="no">Bundler</span><span class="o">.</span><span class="n">setup</span>
+
+<span class="c1"># setup controller</span>
+<span class="n">controller</span> <span class="o">=</span> <span class="no">BallOfLight</span><span class="o">::</span><span class="no">BallOfLightController</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+
+<span class="c1"># Section Goal: Point toward the center for 30 seconds.</span>
+
+<span class="c1"># This command turns the all of the lights on</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">on!</span>
+
+<span class="c1"># alternatively, you could turn the lights on "the hard way" by sending</span>
+<span class="c1"># queueing up the command buffer with a 0-255 integer to the dimmer</span>
+<span class="c1"># control. And then using the write! method to flush the buffer.</span>
+<span class="c1">#</span>
+<span class="c1">#      controller.buffer(:dimmer =&gt; 255)</span>
+<span class="c1">#      controller.write!</span>
+<span class="c1">#</span>
+
+<span class="c1"># methods called without the exclamation point only write to the buffer.</span>
+<span class="c1"># with the exclamation point, your commands will get sent to the DMX</span>
+<span class="c1"># controller immediately.</span>
+
+<span class="c1"># Now let's turn all of the lights to the center point.</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">center</span>
+
+<span class="c1"># Hmmm. We're not sure what color wheel location someone previously left</span>
+<span class="c1"># on the lights, so let's be careful and switch it back to white.</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">nocolor</span> <span class="c1"># this sends the named point instantly</span>
+<span class="n">controller</span><span class="o">.</span><span class="n">write!</span> <span class="c1"># this sends whatever is in the buffer</span>
+
+<span class="c1"># Now the fun part. Let's set up a little loop and run through all the</span>
+<span class="c1"># colors with a half second delay in between.</span>
+
+<span class="o">[</span><span class="ss">:yellow</span><span class="p">,</span> <span class="ss">:red</span><span class="p">,</span> <span class="ss">:green</span><span class="p">,</span> <span class="ss">:blue</span><span class="p">,</span> <span class="ss">:teardrop</span><span class="p">,</span> <span class="ss">:polka</span><span class="p">,</span> <span class="ss">:teal</span><span class="p">,</span> <span class="ss">:rings</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">color</span><span class="o">|</span>
+  <span class="n">controller</span><span class="o">.</span><span class="n">instant!</span><span class="p">(</span><span class="ss">:point</span> <span class="o">=&gt;</span> <span class="n">color</span><span class="p">)</span>
+  <span class="nb">sleep</span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="c1"># what else can it do?</span>
+<span class="c1"># show me a list all of the capabilities of the hooked up devices</span>
+<span class="nb">puts</span> <span class="n">controller</span><span class="o">.</span><span class="n">capabilities</span>
+<span class="c1"># =&gt; [:pan, :tilt, :strobe, :gobo, :dimmer]</span>
+<span class="c1"># these are the basic commands that we can send to the DmxController or the</span>
+<span class="c1"># DmxDevices it holds</span>
+
+<span class="c1"># show me a list all of the named points of the hooked up devices</span>
+<span class="nb">puts</span> <span class="n">controller</span><span class="o">.</span><span class="n">points</span>
+<span class="c1"># =&gt; [:center, :strobe_blackout, :strobe_open, :strobe_slow, :strobe_fast, :strobe_slow_fast, :strobe_fast_slow, :strobe_random, :nocolor, :yellow, :red, :green, :blue, :teardrop, :polka, :teal, :rings, :on, :off]</span>
+<span class="c1"># "points" are like little macros that are composed of one or more of the</span>
+<span class="c1"># basic capabilities.</span>
+
+<span class="c1"># For example, :center is the same as {:pan =&gt; 127, :tilt =&gt; 127}</span>
+</pre></div>
+
+<h2>Capabilities</h2>
+
+<p>The Ball Of Light project is using 12 <a href="http://www.samash.com/wcsstore/root/Product_Manuals_Brochures/American%20DJ/ACOMSCANL/comscan_led.pdf">Comscan LED</a> scanner lights.</p>
+
+<h3>Natively the Comscan LEDs support:</h3>
+
+<ul>
+<li>:pan (0-255) - a pan servo that turns the light clockwise/counter-clockwise</li>
+<li>:tilt (0-255) - a tilt mirror that sweeps the light up/down</li>
+<li>:strobe (0-255) - a strobe light</li>
+<li>:gobo (0-255) - a GOBO wheel that changes the colors of the lights</li>
+<li>:dimmer (0-255) - controls light brightness</li>
+</ul><h3>Additional capabilities from <code>open_lighting</code>
+</h3>
+
+<ul>
+<li>:center</li>
+<li>:origin</li>
+<li>:strobe_blackout</li>
+<li>:strobe_open</li>
+<li>:strobe_slow</li>
+<li>:strobe_fast</li>
+<li>:strobe_slow_fast</li>
+<li>:strobe_fast_slow</li>
+<li>:strobe_random</li>
+<li>:nocolor</li>
+<li>:yellow</li>
+<li>:red</li>
+<li>:green</li>
+<li>:blue</li>
+<li>:teardrop</li>
+<li>:polka</li>
+<li>:teal</li>
+<li>:rings</li>
+<li>:on</li>
+<li>:off</li>
+<li>:bottom</li>
+</ul><p>See <a href="https://github.com/marshally/open_lighting_rb/blob/master/lib/open_lighting/devices/comscan_led.rb">open_lighting_rb</a> for more information on how this works.</p>
+
+<h2>Installation</h2>
+
+<h3>Installation: Hardware required</h3>
+
+<ol>
+<li>DMX USB Pro</li>
+<li>
+<p>Mac running OSX (Lion preferred)</p>
+
+<ul>
+<li>homebrew package manager <a href="https://github.com/mxcl/homebrew/wiki/installation">install instructions here</a>
+</li>
+</ul>
+<pre><code>1. install homebrew itself
+
+    ```bash
+    /usr/bin/ruby -e "$(/usr/bin/curl -fsSL https://raw.github.com/mxcl/homebrew/master/Library/Contributions/install_homebrew.rb)"
+    ```
+
+2. install compilers and command line tools
+
+    * OS X 10.7 Lion: [GCC-10.7.pkg](https://github.com/downloads/kennethreitz/osx-gcc-installer/GCC-10.7-v2.pkg)
+    * OS X 10.6 Snow Leopard: [GCC-10.6.pkg](https://github.com/downloads/kennethreitz/osx-gcc-installer/GCC-10.6.pkg)
+</code></pre>
+</li>
+</ol><pre><code>* DMX USB Pro drivers install
+</code></pre>
+
+<ol>
+<li>Cables
+
+<ul>
+<li>USB 1.0 cable</li>
+<li>1x XLR 5-pin to XLR 3 pin</li>
+<li>11x XLR 3-pin male to XLR 3-pin female</li>
+</ul>
+</li>
+</ol><h3>Installation: Software Installation</h3>
+
+<ol>
+<li>
+<p>Install Homebrew packages</p>
+
+<div class="highlight"><pre>brew install git
+brew tap marshally/homebrew-alt
+brew install ball_of_light
+</pre></div>
+</li>
+</ol><pre><code>* see Troubleshooting section below if you get errors
+</code></pre>
+
+<ol>
+<li>
+<p>Install ruby 1.9.3, if you don't have it already</p>
+
+<div class="highlight"><pre>brew install rbenv
+<span class="nb">echo</span> <span class="s1">'if which rbenv &gt; /dev/null; then eval "$(rbenv init -)"; fi'</span> &gt;&gt; .bash_profile
+brew install ruby-build
+rbenv install 1.9.3-p194
+rbenv rehash
+</pre></div>
+</li>
+<li>
+<p>install ball_of_light excitements</p>
+
+<div class="highlight"><pre>git clone https://github.com/marshally/ball_of_light
+<span class="nb">cd </span>ball_of_light
+bundle install --path vendor/bundle --deployment
+bin/ball_of_light link
+</pre></div>
+</li>
+<li><p>Install DMX USB Pro drivers from <a href="http://www.ftdichip.com/Drivers/VCP.htm">http://www.ftdichip.com/Drivers/VCP.htm</a></p></li>
+</ol><h3>Installation: Hardware Installation</h3>
+
+<ol>
+<li>
+<p>plug in MS Kinect</p>
+
+<ul>
+<li>
+<p>check that Kinect is operational</p>
+
+<div class="highlight"><pre>ball_of_light <span class="nb">test</span> --only kinect
+</pre></div>
+</li>
+</ul>
+</li>
+<li>
+<p>plug in DMX USB Pro</p>
+
+<ol>
+<li>
+<p>check that the DMX USB Pro is operational</p>
+
+<div class="highlight"><pre>ball_of_light <span class="nb">test</span> --only dmx
+</pre></div>
+</li>
+<li>
+<p>configure DMX ports</p>
+
+<div class="highlight"><pre>ball_of_light configure
+</pre></div>
+</li>
+<li>
+<p>check that the Open Lighting Architecture system is operational</p>
+
+<div class="highlight"><pre>ball_of_light <span class="nb">test</span> --only ola
+</pre></div>
+</li>
+</ol>
+</li>
+<li>
+<p>Open up the OLA admin console at '<a href="http://localhost:9090/">http://localhost:9090/</a>'</p>
+
+<p><img src="http://marshally.github.com/ball_of_light/OLA_Admin_one.jpg" alt="OLA Console"></p>
+</li>
+<li>
+<p>Add a new universe</p>
+
+<ul>
+<li>universe id=1</li>
+<li>universe name=BALL_OF_LIGHT</li>
+<li>select Open DMX Pro OUTPUT</li>
+<li>click Add Universe (scroll to bottom)</li>
+</ul>
+<p><img src="http://marshally.github.com/ball_of_light/OLA_Admin_configure_universe.jpg" alt="Add Universe"></p>
+</li>
+<li><p>Daisy chain connect all of the lights together</p></li>
+<li>
+<p>Set each light to a unique DMX control number, offset by 5</p>
+
+<ul>
+<li>e.g. 1,6,11,16,21,26,31,36,41,46,51,56</li>
+</ul>
+<div class="highlight"><pre>ball_of_light lights --list
+</pre></div>
+</li>
+<li>
+<p>check that lights are operational with</p>
+
+<div class="highlight"><pre>ball_of_light lights --center
+</pre></div>
+</li>
+<li>
+<p>what to see the raw commands that the lights are executing? pass in --testing</p>
+
+<div class="highlight"><pre>ball_of_light lights --center --testing
+</pre></div>
+</li>
+</ol><h3>Installation: Troubleshooting</h3>
+
+<p>If you are having trouble installing pkg-config-2.7 you can cheat with these commands:</p>
+
+<pre><code>```bash
+brew install wget
+rm /usr/local/Library/Formula/pkg-config.rb
+wget  https://raw.github.com/mxcl/homebrew/63415cccaecf9cccf204570ea2242b56ce0ffdc4/Library/Formula/pkg-config.rb /usr/local/Library/Formula/
+brew install ball_of_light
+```
+</code></pre>
+
+<h2>Calibration</h2>
+
+<div class="highlight"><pre>ball_of_light calibrate
+</pre></div>
+
+<p>This will begin the <code>ball_of_light</code> test sequence. There are 9 or more calibration points per light, so this will take between 15m and 1h for 12 lights. Depending on how quickly you move.</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/marshally/ball_of_light/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/marshally/ball_of_light/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/marshally/ball_of_light"></a> is maintained by <a href="https://github.com/marshally">marshally</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
