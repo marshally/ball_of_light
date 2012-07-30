@@ -2,6 +2,14 @@
 
 [![Build Status](https://secure.travis-ci.org/marshally/ball_of_light.png?branch=master)](http://travis-ci.org/marshally/ball_of_light)
 
+## Contents
+
+1. [Project Goals](#project-goals)
+2. [Example](#example)
+3. [Capabilities](#capabilities)
+4. [Installation](#installation)
+5. [Calibration](#calibration)
+
 ## Project Goals
 
 Create an light show based on the movements of participants, with data gathered by a Microsoft Kinect. See [the Ball of Light](http://balloflight.com)
