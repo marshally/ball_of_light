@@ -149,7 +149,8 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
     ```bash
     brew install git
     brew tap marshally/homebrew-alt
-    brew install ball_of_light
+    brew install kinectable_pipe
+    brew install open-lighting
     ````
 
 1. Install ruby 1.9.3, if you don't have it already
