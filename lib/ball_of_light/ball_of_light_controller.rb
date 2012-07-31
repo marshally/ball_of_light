@@ -18,7 +18,9 @@ module BallOfLight
     end
 
     def self.write_points(values)
-      Dir.mkdir(File.dirname points_file)
+      unless Dir.exists?(File.dirname points_file)
+        Dir.mkdir(File.dirname points_file)
+      end
       IO.write(points_file, values.to_json)
     end
 

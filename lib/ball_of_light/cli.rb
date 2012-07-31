@@ -87,11 +87,17 @@ module BallOfLight
 
       name = ask("What is the name of your point?")
 
+      number = 0
+
       while(1) do
-        answer = ask("Which light to calibrate? [1-12, or (q)uit]")
+        answer = ask("Which light to calibrate? [1-12, (n)ext [#{number+1}] or (q)uit]")
         break if ["q", "quit"].include? answer
 
-        number = answer.to_i
+        if answer == "n"
+          number += 1
+        else
+          number = answer.to_i
+        end
         points[number-1] ||= {}
         points[number-1][name] = {}
 
@@ -99,27 +105,30 @@ module BallOfLight
         controller.devices[number-1].buffer(:dimmer => 255)
         controller.write!
 
-        say "Press (a/d) to pan and (w/s) to tilt. <space> to save or (q)uit"
+        say "Press (a/d) to pan and (w/s) to tilt. <space/enter> to save or (q)uit/ESC"
 
         pan, tilt = 127, 127
 
         while(char = STDIN.getch)
-          case char.downcase
-          when "a"
+          case char.downcase.ord
+          when 97  # "a"
             pan = [pan-1, 0].max
-          when "d"
+          when 100 # "d"
             pan = [pan+1, 255].min
-          when "w"
+          when 119 # "w"
             tilt = [tilt+1, 255].min
-          when "s"
+          when 115 # "s"
             tilt = [tilt-1, 0].max
-          when "q"
+          when 27, 113
             break
-          when " "
-            points[number-1][name] = {:pan => pan, :tilt => tilt}
+          when 13, 32
+            pt = {:pan => pan, :tilt => tilt}
+            points[number-1][name] = pt
+            say "saving light #{number} #{name} position #{pt.inspect}"
             BallOfLightController.write_points points
             break
           else
+            puts char.ord
           end
 
           controller.devices[number-1].buffer(:pan => pan, :tilt => tilt)
