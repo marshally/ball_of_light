@@ -122,36 +122,35 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
 
 1. DMX USB Pro
 1. Mac running OSX (Lion preferred)
-    * homebrew package manager [install instructions here](https://github.com/mxcl/homebrew/wiki/installation)
+  * homebrew package manager [install instructions here](https://github.com/mxcl/homebrew/wiki/installation)
+    1. install homebrew itself
 
-        1. install homebrew itself
+      ```bash
+      /usr/bin/ruby -e "$(/usr/bin/curl -fsSL https://raw.github.com/mxcl/homebrew/master/Library/Contributions/install_homebrew.rb)"
+      ```
+      
+    2. install compilers and command line tools
 
-            ```bash
-            /usr/bin/ruby -e "$(/usr/bin/curl -fsSL https://raw.github.com/mxcl/homebrew/master/Library/Contributions/install_homebrew.rb)"
-            ```
+        * OS X 10.7 Lion: [GCC-10.7.pkg](https://github.com/downloads/kennethreitz/osx-gcc-installer/GCC-10.7-v2.pkg)
+        * OS X 10.6 Snow Leopard: [GCC-10.6.pkg](https://github.com/downloads/kennethreitz/osx-gcc-installer/GCC-10.6.pkg)
 
-        2. install compilers and command line tools
-
-            * OS X 10.7 Lion: [GCC-10.7.pkg](https://github.com/downloads/kennethreitz/osx-gcc-installer/GCC-10.7-v2.pkg)
-            * OS X 10.6 Snow Leopard: [GCC-10.6.pkg](https://github.com/downloads/kennethreitz/osx-gcc-installer/GCC-10.6.pkg)
-
-    * DMX USB Pro drivers install
 1. Cables
-    * USB 1.0 cable
-    * 1x XLR 5-pin to XLR 3 pin
-    * 11x XLR 3-pin male to XLR 3-pin female
+
+  * USB 1.0 cable
+  * 1x XLR 5-pin to XLR 3 pin
+  * 11x XLR 3-pin male to XLR 3-pin female
 
 ### Installation: Software Installation
 
 1. Install Homebrew packages
+
+  * see Troubleshooting section below if you get errors
 
     ```bash
     brew install git
     brew tap marshally/homebrew-alt
     brew install ball_of_light
     ````
-    
-    * see Troubleshooting section below if you get errors
 
 1. Install ruby 1.9.3, if you don't have it already
 
@@ -237,12 +236,12 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
 
 If you are having trouble installing pkg-config-2.7 you can cheat with these commands:
 
-    ```bash
-    brew install wget
-    rm /usr/local/Library/Formula/pkg-config.rb
-    wget  https://raw.github.com/mxcl/homebrew/63415cccaecf9cccf204570ea2242b56ce0ffdc4/Library/Formula/pkg-config.rb /usr/local/Library/Formula/
-    brew install ball_of_light
-    ```
+```bash
+brew install wget
+rm /usr/local/Library/Formula/pkg-config.rb
+wget  https://raw.github.com/mxcl/homebrew/63415cccaecf9cccf204570ea2242b56ce0ffdc4/Library/Formula/pkg-config.rb /usr/local/Library/Formula/
+brew install ball_of_light
+```
 
 ## Calibration
 
