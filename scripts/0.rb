@@ -15,6 +15,8 @@ end
 # setup controller
 controller = BallOfLight::BallOfLightController.new(options)
 
+#####################################################################
+
 # Send the exact same command to all lights for this series:`
 # Point toward the center for 30 seconds.
 
