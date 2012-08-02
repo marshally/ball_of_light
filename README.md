@@ -129,7 +129,7 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
       /usr/bin/ruby -e "$(/usr/bin/curl -fsSL https://raw.github.com/mxcl/homebrew/master/Library/Contributions/install_homebrew.rb)"
       ```
       
-    2. install compilers and command line tools
+    2. ONLY DO IF YOU DO NOT ALREADY HAVE XCODE: install compilers and command line tools
 
         * OS X 10.7 Lion: [GCC-10.7.pkg](https://github.com/downloads/kennethreitz/osx-gcc-installer/GCC-10.7-v2.pkg)
         * OS X 10.6 Snow Leopard: [GCC-10.6.pkg](https://github.com/downloads/kennethreitz/osx-gcc-installer/GCC-10.6.pkg)
@@ -149,14 +149,15 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
     ```bash
     brew install git
     brew tap marshally/homebrew-alt
-    brew install ball_of_light
+    brew install kinectable_pipe
+    brew install open-lighting
     ````
 
 1. Install ruby 1.9.3, if you don't have it already
 
     ```bash
     brew install rbenv
-    echo 'if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi' >> .bash_profile
+    echo 'if which rbenv > /dev/null; then eval "\$(rbenv init -)"; fi' >> .bash_profile
     brew install ruby-build
     rbenv install 1.9.3-p194
     rbenv rehash
