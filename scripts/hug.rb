@@ -47,7 +47,7 @@ lower_lights.each do |light|
 end
 
 # The overheads turn white, dim to 50%, and move to center
-overhead.each do |light|
+overhead_ligts.each do |light|
   controller.devices[light-1].nocolor
   controller.devices[light-1].dimmer(127)
   controller.devices[light-1].set(:point => :bottom)
@@ -55,16 +55,16 @@ end
 
 # Blue lights dim to very low light as both people approach
 
-while (distance = STDIN.gets)
-  # 4000 ~= 127
-  #    0 = 0
-  value = somefunction(distance)
-  [1,2,3,4,5,6,7,8].each do |light|
-    controller.devices[light].dimmer!(value)
-  end
+# while (distance = STDIN.gets)
+#   # 4000 ~= 127
+#   #    0 = 0
+#   value = somefunction(distance)
+#   [1,2,3,4,5,6,7,8].each do |light|
+#     controller.devices[light].dimmer!(value)
+#   end
 
-  break if value < 100
-end
+#   break if value < 100
+# end
 
 # at contact all lights go white
 
@@ -73,10 +73,10 @@ controller.dimmer!(255)
 
 controller.begin_animation!(:seconds => 1) do |devices|
   # MCY: this is not exactly correct
-  controller.devices.dimmer(201)
+  controller.devices.each{|d| d.dimmer(201)}
 end
 
-controller.dimmer(255)
+controller.buffer(:dimmer => 255)
 controller.strobe_fast
 
 colors = [:yellow, :red, :green, :blue, :teardrop, :polka, :teal, :rings]
@@ -84,7 +84,7 @@ colors = [:yellow, :red, :green, :blue, :teardrop, :polka, :teal, :rings]
 20.times do
   [1,2,3,4,5,6,7,8,9,10,11,12].each do |light|
     # pick a random color for the light
-    controller[light] = colors.shuffle.first
+    controller.devices[light-1].buffer :point => colors.shuffle.first
   end
   controller.write!
   sleep(0.250)

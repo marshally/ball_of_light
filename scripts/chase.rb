@@ -30,11 +30,11 @@ sequence = [5, 10, 11, 7, 4, 1, 8, 12, 11, 6, 2, 5, 9, 12, 7, 3, 6, 10, 9, 8, 4,
 [8.0, 6.0, 4.0, 2.0, 1.0, 1.0, 1.0, 1.0].each do |duration|
   puts duration
   sequence.each do |light|
-    controller.dimmer 0
+    controller.buffer(:dimmer => 0)
     controller.devices[light-1].on
     controller.devices[light-1].strobe_fast
-    sleep (duration/sequence.count)
     controller.write!
+    sleep (duration/sequence.count)
   end
 end
 
@@ -43,6 +43,5 @@ controller.on!
 
 puts "end"
 controller.begin_animation!(:seconds => 2) do |devices|
-  # MCY: this is not exactly correct
-  devices.each {|d| d.off!}
+  devices.each {|d| d.buffer(:dimmer => 0)}
 end

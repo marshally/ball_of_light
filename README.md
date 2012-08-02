@@ -128,7 +128,7 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
       ```bash
       /usr/bin/ruby -e "$(/usr/bin/curl -fsSL https://raw.github.com/mxcl/homebrew/master/Library/Contributions/install_homebrew.rb)"
       ```
-      
+
     2. ONLY DO IF YOU DO NOT ALREADY HAVE XCODE: install compilers and command line tools
 
         * OS X 10.7 Lion: [GCC-10.7.pkg](https://github.com/downloads/kennethreitz/osx-gcc-installer/GCC-10.7-v2.pkg)
@@ -143,8 +143,7 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
 ### Installation: Software Installation
 
 1. Install Homebrew packages
-
-  * see Troubleshooting section below if you get errors
+    * see Troubleshooting section below if you get errors
 
     ```bash
     brew install git
@@ -233,6 +232,14 @@ See [open_lighting_rb](https://github.com/marshally/open_lighting_rb/blob/master
     ball_of_light lights --center --testing
     ```
 
+1. run one of the project scripts
+
+    ```bash
+    ruby scripts/0.rb
+    # or
+    TEST=on ruby scripts/hug.rb
+    ```
+
 ### Installation: Troubleshooting
 
 If you are having trouble installing pkg-config-2.7 you can cheat with these commands:
@@ -242,6 +249,14 @@ brew install wget
 rm /usr/local/Library/Formula/pkg-config.rb
 wget  https://raw.github.com/mxcl/homebrew/63415cccaecf9cccf204570ea2242b56ce0ffdc4/Library/Formula/pkg-config.rb /usr/local/Library/Formula/
 brew install ball_of_light
+```
+
+If the Kinect is not working, you might have to use this command to add the
+OpenNI environment variable. (homebrew would have asked you to do this earlier,
+but it is easy to miss).
+
+```bash
+echo 'export OPEN_NI_INSTALL_PATH=/usr/local' >> ~/.bash_profile
 ```
 
 ## Calibration

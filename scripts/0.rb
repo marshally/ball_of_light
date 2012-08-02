@@ -30,7 +30,8 @@ controller.write! # this sends whatever is in the buffer
 controller.nocolor! # this sends the named point instantly
 
 # Cycle through each color with .5 sec/color.
-controller.bottom!
+# controller.bottom!
+controller.tilt(30)!
 
 [:yellow, :red, :green, :blue, :teardrop, :polka, :teal, :rings].each do |color|
   controller.instant!(:point => color)
@@ -42,7 +43,8 @@ controller.buffer(:gobo => 0) #nocolor # turn the color off first
 
 # Strobe for a second and point at the ground
 controller.strobe_fast
-controller.bottom!
+# controller.bottom!
+controller.tilt(30)!
 # or controller.instant!(:tilt => 80)
 
 # Have all lights sweep slowly back and forth for 30 sec, cycling through the colors. The lights have a greater range in one axis, so sweep in that direction. Return to center when complete.
