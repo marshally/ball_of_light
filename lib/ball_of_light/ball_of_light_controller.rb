@@ -11,7 +11,9 @@ module BallOfLight
       end
 
       BallOfLightController.additional_points.each_with_index do |points, i|
-        devices[i].points.merge! points
+        if devices[i]
+          devices[i].points.merge! points.symbolize_keys!
+        end
       end
     end
 
@@ -26,9 +28,13 @@ module BallOfLight
       IO.write(points_file, values.to_json)
     end
 
+    def self.points_file_contents
+      IO.read(points_file)
+    end
+
     def self.additional_points
       begin
-        points = JSON.parse(IO.read(points_file)) || []
+        points = JSON.parse(points_file_contents) || []
       rescue JSON::ParserError
       rescue Errno::ENOENT
       end
