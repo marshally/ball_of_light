@@ -10,7 +10,9 @@ module BallOfLight
         self << OpenLighting::Devices::ComscanLed.new
       end
 
-      devices.each_with_index {|device, i| device.add_points BallOfLightController.additional_points[i]}
+      BallOfLightController.additional_points.each_with_index do |points, i|
+        devices[i].points.merge! points
+      end
     end
 
     def self.points_file
