@@ -20,59 +20,60 @@ controller = BallOfLight::BallOfLightController.new(options)
 # Send the exact same command to all lights for this series:`
 # Point toward the center for 30 seconds.
 
-# This command turns the light on
+# This command turns all of the lights in the controller on
 controller.buffer(:dimmer => 255)
+# This command centers the lights
 controller.buffer(:pan => 127, :tilt => 127)
+# This command also centers the lights, through use of a point named "center",
+# which is set up so that :center => :pan => 127, :tilt => 127
 controller.buffer(:point => :center)
-controller.center # you can call named points as if they are methods. This queues up the command
-controller.write! # this sends whatever is in the buffer
+# you can call named points as if they are methods. This buffers the command
+controller.center
+# write! sends whatever is in the buffer
+controller.write!
 
-controller.nocolor! # this sends the named point instantly
+controller.white! # this sends the named point instantly
 
 # Cycle through each color with .5 sec/color.
-# controller.bottom!
-controller.tilt(30)!
-
-[:yellow, :red, :green, :blue, :teardrop, :polka, :teal, :rings].each do |color|
+[:yellow, :red, :green, :blue, :teardrop, :polka, :teal, :rings, :white].each do |color|
   controller.instant!(:point => color)
   sleep(0.5)
 end
 
-#turn the color off first
-controller.buffer(:gobo => 0) #nocolor # turn the color off first
-
 # Strobe for a second and point at the ground
 controller.strobe_fast
-# controller.bottom!
-controller.tilt(30)!
-# or controller.instant!(:tilt => 80)
+controller.bottom!
+sleep(1)
 
-# Have all lights sweep slowly back and forth for 30 sec, cycling through the colors. The lights have a greater range in one axis, so sweep in that direction. Return to center when complete.
+controller.strobe_open
+# Have all lights sweep slowly back and forth for 30 sec, cycling through the
+# colors. The lights have a greater range in one axis, so sweep in that
+# direction. Return to center when complete.
 3.times do
-  # back 5 seconds
+  # back 2.5 seconds
   controller.begin_animation!(:seconds => 2.5, :pan => 0, :gobo => 8)
   # forward 5 seconds
-  controller.begin_animation!(:seconds => 2.5, :pan => 255, :gobo => 57)
+  controller.begin_animation!(:seconds => 5, :pan => 255, :gobo => 57)
+  # and back to center
+  controller.begin_animation!(:seconds => 2.5, :point => :center)
 end
 
-# back to center
-controller.begin_animation!(:seconds => 2, :pan => 0, :tilt => 80)
-
-# Have all lights inscribe a slow spiral, terminating in a circle, as wide as the hardware allows. Curved spirals are hard to program, so you can do an easy square spiral with a couple of do loops. Continue cycling between colors with each loop. (or substitute a cooler routine.)
-# NOTE: this is more of a circle?
-controller.begin_animation!(:seconds => 2.5, :tilt => 55, :pan => 255)
-controller.begin_animation!(:seconds => 2.5, :tilt => 30, :pan => 255)
-controller.begin_animation!(:seconds => 2.5, :tilt => 55, :pan => 255)
-controller.begin_animation!(:seconds => 2.5, :tilt => 80, :pan => 255)
+# Have all lights inscribe a slow spiral, terminating in a circle, as wide as
+# the hardware allows. Curved spirals are hard to program, so you can do an easy
+# square spiral with a couple of do loops. Continue cycling between colors with
+# each loop. (or substitute a cooler routine.)
+controller.spiral_out
 
 # Put all lights in automatic light routine for 30 seconds
 # MCY: not sure what this means?
 
 # Do the spiral in reverse.
-controller.begin_animation!(:seconds => 2.5, :tilt => 80, :pan => 255)
-controller.begin_animation!(:seconds => 2.5, :tilt => 55, :pan => 255)
-controller.begin_animation!(:seconds => 2.5, :tilt => 30, :pan => 255)
-controller.begin_animation!(:seconds => 2.5, :tilt => 55, :pan => 255)
+controller.spiral_in
+controller.begin_animation!(:seconds => 2.5, :point => :front)
+controller.begin_animation!(:seconds => 2.5, :point => :left)
+controller.begin_animation!(:seconds => 2.5, :point => :back)
+controller.begin_animation!(:seconds => 2.5, :point => :bottom)
+
 
 controller.center
 controller.instant!(:dimmer => 0)
