@@ -74,6 +74,10 @@ module BallOfLight
       [4,5,6,7].map{|i| devices[i]}
     end
 
+    def chase_sequence
+      [4, 9, 10, 6, 3, 0, 7, 11, 10, 5, 1, 4, 8, 11, 6, 2, 5, 9, 8, 7, 3, 0].map{|i| devices[i]}
+    end
+
     def spiral_out
       begin_animation!(:seconds => 2.5, :point => :bottom)
 
