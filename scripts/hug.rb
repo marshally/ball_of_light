@@ -38,19 +38,17 @@ controller = BallOfLight::BallOfLightController.new(options)
 
 controller.origin!
 
-overhead_ligts = [9,10,11,12]
-lower_lights = [1,2,3,4,5,6,7,8]
 # All lights except 9, 10, 11, 12 turn blue
-lower_lights.each do |light|
-  controller.devices[light-1].blue
-  controller.devices[light-1].dimmer(127)
+controller.top_lights.each do |light|
+  light.blue
+  light.dimmer(127)
 end
 
 # The overheads turn white, dim to 50%, and move to center
-overhead_ligts.each do |light|
-  controller.devices[light-1].nocolor
-  controller.devices[light-1].dimmer(127)
-  controller.devices[light-1].set(:point => :bottom)
+controller.top_lights.each do |light|
+  light.nocolor
+  light.dimmer(127)
+  light.bottom
 end
 
 # Blue lights dim to very low light as both people approach
@@ -82,9 +80,9 @@ controller.strobe_fast
 colors = [:yellow, :red, :green, :blue, :teardrop, :polka, :teal, :rings]
 
 20.times do
-  [1,2,3,4,5,6,7,8,9,10,11,12].each do |light|
+  controller.devices.each do |light|
     # pick a random color for the light
-    controller.devices[light-1].buffer :point => colors.shuffle.first
+    light.buffer :point => colors.shuffle.first
   end
   controller.write!
   sleep(0.250)
