@@ -47,5 +47,5 @@ while(1)
   rescue Exception
     puts Exception
   end
-  controller.begin_animation!(:seconds => 0.05, :dimmer => controller.heartbeat.next)
+  controller.animate!(:seconds => 0.05, :dimmer => controller.heartbeat.next)
 end

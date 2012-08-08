@@ -37,6 +37,6 @@ end
 controller.strobe_open
 controller.on!
 
-controller.begin_animation!(:seconds => 2) do |animate|
+controller.animate!(:seconds => 2) do |animate|
   animate.buffer(:dimmer => 0)
 end

@@ -83,11 +83,10 @@ module BallOfLight
     end
 
     def spiral_out
-      begin_animation!(:seconds => 2.5, :point => :bottom)
-
+      animate!(:seconds => 2.5, :point => :bottom)
       [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].each do |i|
         [:front, :left, :back, :right].each do |direction|
-          begin_animation!(:seconds => 0.5,
+          animate!(:seconds => 0.25,
             :pan  => i*(points[direction][:pan]  - points[:bottom][:pan])  + points[:bottom][:pan],
             :tilt => i*(points[direction][:tilt] - points[:bottom][:tilt]) + points[:bottom][:tilt],
           )
@@ -96,21 +95,21 @@ module BallOfLight
     end
 
     def spiral_in
-      begin_animation!(:seconds => 2.5, :point => :right)
+      animate!(:seconds => 2.5, :point => :right)
       [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1].each do |i|
         [:right, :back, :left, :front].each do |direction|
-          begin_animation!(:seconds => 2.5,
+          animate!(:seconds => 0.25,
             :pan  => i*(points[direction][:pan]  - points[:bottom][:pan])  + points[:bottom][:pan],
             :tilt => i*(points[direction][:tilt] - points[:bottom][:tilt]) + points[:bottom][:tilt],
           )
         end
       end
-      begin_animation!(:seconds => 2.5, :point => :bottom)
+      animate!(:seconds => 2.5, :point => :bottom)
     end
 
     def heartbeat!
       30.times do
-        begin_animation!(:seconds => 0.05, :dimmer => heartbeat.next)
+        animate!(:seconds => 0.05, :dimmer => heartbeat.next)
       end
     end
 

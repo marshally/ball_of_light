@@ -69,10 +69,7 @@ end
 controller.nocolor
 controller.dimmer!(255)
 
-controller.begin_animation!(:seconds => 1) do |devices|
-  # MCY: this is not exactly correct
-  controller.devices.each{|d| d.dimmer(201)}
-end
+controller.animate!(:seconds => 1, :dimmer => 201)
 
 controller.buffer(:dimmer => 255)
 controller.strobe_fast

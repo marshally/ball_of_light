@@ -51,11 +51,11 @@ controller.strobe_open
 # direction. Return to center when complete.
 3.times do
   # back 2.5 seconds
-  controller.begin_animation!(:seconds => 2.5, :pan => 0, :gobo => 8)
+  controller.animate!(:seconds => 2.5, :pan => 0, :gobo => 8)
   # forward 5 seconds
-  controller.begin_animation!(:seconds => 5, :pan => 255, :gobo => 57)
+  controller.animate!(:seconds => 5, :pan => 255, :gobo => 57)
   # and back to center
-  controller.begin_animation!(:seconds => 2.5, :point => :center)
+  controller.animate!(:seconds => 2.5, :point => :center)
 end
 
 # Have all lights inscribe a slow spiral, terminating in a circle, as wide as
@@ -69,10 +69,10 @@ controller.spiral_out
 
 # Do the spiral in reverse.
 controller.spiral_in
-controller.begin_animation!(:seconds => 2.5, :point => :front)
-controller.begin_animation!(:seconds => 2.5, :point => :left)
-controller.begin_animation!(:seconds => 2.5, :point => :back)
-controller.begin_animation!(:seconds => 2.5, :point => :bottom)
+controller.animate!(:seconds => 2.5, :point => :front)
+controller.animate!(:seconds => 2.5, :point => :left)
+controller.animate!(:seconds => 2.5, :point => :back)
+controller.animate!(:seconds => 2.5, :point => :bottom)
 
 
 controller.center

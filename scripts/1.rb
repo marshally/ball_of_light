@@ -52,7 +52,7 @@ end
 #####################################################################
 
 # Return all lights to center for 1 second with round white spot.
-controller.begin_animation!(:seconds => 2.5, :point => :center)
+controller.animate!(:seconds => 2.5, :point => :center)
 sleep(1)
 
 controller.write!
@@ -99,7 +99,7 @@ while(1)
   rescue Exception
     puts Exception
   end
-  controller.begin_animation!(:seconds => 0.05, :dimmer => controller.heartbeat.next)
+  controller.animate!(:seconds => 0.05, :dimmer => controller.heartbeat.next)
   break if (Time.now - start) > 30
 end
 
