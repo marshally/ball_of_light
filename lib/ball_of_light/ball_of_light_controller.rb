@@ -138,36 +138,35 @@ module BallOfLight
     def heartbeat
       @heartbeat ||= Enumerator.new do |e|
         loop do
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
+          e.yield 30
+          e.yield 255
           e.yield 255
           e.yield 0
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 255
-          e.yield 0
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
-          e.yield 25
+          e.yield 50
+          e.yield 75
+          e.yield 45
+          e.yield 40
+          e.yield 37
+          e.yield 35
+          e.yield 33
+          e.yield 30
+          e.yield 27
+          e.yield 24
+          e.yield 21
+          e.yield 18
+          e.yield 15
+          e.yield 12
+          e.yield 9
+          e.yield 8
+          e.yield 7
+          e.yield 6
+          e.yield 5
+          e.yield 4
+          e.yield 3
+          e.yield 2
+          e.yield 1
+          e.yield 1
+          e.yield 1
         end
       end
     end
