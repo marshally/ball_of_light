@@ -50,6 +50,14 @@ module BallOfLight
     # red_ring    = [2, 5, 9, 12, 7, 3]
     # green_ring  = [3, 4, 8, 9, 10, 6]
 
+    def random_color
+      self.colors.shuffle[0]
+    end
+
+    def colors
+      [:yellow, :red, :green, :blue, :teardrop, :polka, :teal, :rings]
+    end
+
     def yellow_ring_lights
       [4, 9, 10, 6, 3, 0].map{|i| devices[i]}
     end
