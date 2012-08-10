@@ -65,6 +65,27 @@ module BallOfLight
       center if options[:center]
     end
 
+    desc "center", "center lights"
+    def center
+      controller.instant!(:point => :center)
+      controller.strobe_open!
+      controller.dimmer!(255)
+      controller.top_lights.each do |light|
+        light.buffer(:point => :white)
+      end
+      controller.write!
+    end
+
+    desc "heartbeat", "heartbeat"
+    def heartbeat
+      controller.instant!(:point => :center)
+      controller.strobe_open!
+      controller.dimmer!(255)
+      100.times do
+        controller.heartbeat!
+      end
+    end
+
     desc "capabilities", "display the lights basic capabilities"
     def capabilities
       say controller.capabilities
@@ -220,12 +241,6 @@ module BallOfLight
       def kill_olad
         pid = `ps aux| grep olad | grep -v grep`.split(/\s+/)[1]
         `kill -9 #{pid}` if pid
-      end
-
-      def center
-        controller.instant!(:point => :center)
-        controller.strobe_open!
-        controller.dimmer!(255)
       end
 
       def list_lights
