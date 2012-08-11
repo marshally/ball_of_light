@@ -14,7 +14,7 @@ STDIN.each do |line|
   begin
     blob = JSON.parse(line)
     if blob["skeletons"]
-      Users.new(blob).each do |u|
+      Scene.new(blob).users.each do |u|
         if v = u.pointing
           output = {:gesture => {:point => {:x => v[0], :y => v[1], :z => v[2]}}}
           STDOUT.puts output.to_json

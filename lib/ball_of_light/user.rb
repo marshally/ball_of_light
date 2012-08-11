@@ -48,8 +48,6 @@ class User
         end
       end
 
-      puts v1n.inspect
-      puts v2n.inspect
       return v1n
     end
   end
