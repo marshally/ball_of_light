@@ -1,13 +1,14 @@
 require 'spec_helper'
 
 module BallOfLight
-  describe Users do
+  describe Scene do
     describe ".initialize" do
       context "when passed a blob" do
         it "should serialize the values" do
-          u = Users.new(:skeletons => [:userid => 1, :joints => [{:name => "head", :x => "123", :y => 456.0, :z => 789}]])
-          u[0].id.should == 1
-          j = u[0].joints[:head]
+          scene = Scene.new(:skeletons => [:userid => 1, :joints => [{:name => "head", :x => "123", :y => 456.0, :z => 789}]])
+          user = scene.users[0]
+          user.id.should == 1
+          j = user.joints[:head]
           j.name.should == "head"
           j.x.should == 123.0
           j.y.should == 456.0
