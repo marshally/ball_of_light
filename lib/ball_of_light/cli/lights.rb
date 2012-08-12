@@ -9,9 +9,14 @@ module BallOfLight
         controller.instant!(:point => :center)
         controller.strobe_open!
         controller.dimmer!(255)
-        controller.top_lights.each do |light|
-          light.buffer(:point => :white)
-        end
+        controller.write!
+      end
+
+      desc "point", "lights to a named point"
+      def point(pt)
+        controller.instant!(:point => pt.to_sym)
+        controller.strobe_open!
+        controller.dimmer!(255)
         controller.write!
       end
 
