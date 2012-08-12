@@ -17,34 +17,33 @@ module BallOfLight
 
         number = 0
 
-        # MCY -- allow enter to automagically jump to the next light instead of typing n
-        # and then 'n' inside aswd mode saves and jumps to the next light
-
         while(1) do
           answer = ask("Which light to calibrate? [1-12, (n)ext [#{number+1}] or (q)uit]")
           break if ["q", "quit"].include? answer
 
-          if answer == "n"
+          if answer == "n" || answer == ""
             number += 1
+            exit if number > controller.devices.count
+            say "calibrating light #{number}"
           else
             number = answer.to_i
           end
 
-          saved = BallOfLightController.additional_points
+          points = BallOfLightController.additional_points
 
-          points = {}
           # puts points.inspect
           points[number-1] ||= {}
           points[number-1][name] ||= {}
 
+          controller.origin!
           controller.buffer(:dimmer => 0)
           controller.devices[number-1].buffer(:dimmer => 255)
           controller.write!
 
           say "Press (a/d) to pan and (w/s) to tilt. <space/enter> to save or (q)uit/ESC"
 
-          pan  = saved[number-1][name.to_s]["pan"]  || 127
-          tilt = saved[number-1][name.to_s]["tilt"] || 127
+          pan  = points[number-1][name.to_s]["pan"]  || 127
+          tilt = points[number-1][name.to_s]["tilt"] || 127
           puts pan
           puts tilt
           while(char = STDIN.getch)
@@ -66,7 +65,7 @@ module BallOfLight
               BallOfLightController.write_points points
               break
             else
-              puts char.ord
+              say char.ord
             end
 
             controller.devices[number-1].buffer(:pan => pan, :tilt => tilt)
