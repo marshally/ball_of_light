@@ -12,10 +12,12 @@ module BallOfLight
 
       BallOfLightController.additional_points.each_with_index do |points, i|
         if points.is_a? Hash
-          points.values.each{|v| v.symbolize_keys!}
+          points.symbolize_keys!
+
+          points.values.each{|v| v.symbolize_keys! if v.is_a? Hash}
         end
 
-        if devices[i]
+        if devices[i] && points
           devices[i].points.merge! points.symbolize_keys!
         end
       end
