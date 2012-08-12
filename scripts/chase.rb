@@ -19,7 +19,7 @@ controller = BallOfLight::BallOfLightController.new(options)
 
 
 controller.off!
-controller.bottom!
+controller.center!
 # sequence = [5, 10, 11, 7, 4, 1, 8, 12, 11, 6, 2, 5, 9, 12, 7, 3, 6, 10, 9, 8, 4, 1]
 
 last = nil
