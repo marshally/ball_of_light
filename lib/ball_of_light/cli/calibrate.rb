@@ -1,5 +1,5 @@
 require 'thor'
-
+require 'open3'
 module BallOfLight
   module CLI
     class Calibrate < Thor
@@ -75,13 +75,63 @@ module BallOfLight
         end
       end
 
+      desc "auto", "magic"
+      def auto
+        start = Time.now
+        cmd = "#{ENV['HOME']}/Projects/kinectable_pipe/kinectable_pipe -r 4"
+        stdin, stdout, wait = Open3.popen2e(cmd)
+
+        say "someone should stand in the frame until there is some output"
+        capture_images(stdout, "#{ENV['HOME']}/.ball_of_light/person")
+
+        yes? "is the person out of the frame? (yes)"
+
+        controller.off!
+
+
+        controller.devices.each do |device|
+          controller.dimmer!(0)
+          device.dimmer(255)
+
+          25.times do |pan|
+            pan  = pan * 10
+            25.times do |tilt|
+              tilt = tilt * 10
+              puts "pan:#{pan} tilt:#{tilt}"
+
+              device.buffer(:tilt => tilt, :pan => pan)
+              controller.write!
+              capture_images(stdout, "#{ENV['HOME']}/.ball_of_light/light_#{1+(device.start_address-1)/5}_pan#{pan}_tilt#{tilt}")
+            end
+          end
+        end
+
+        puts "#{Time.now - start} seconds elapsed"
+      end
+
       no_tasks do
+        def capture_images(pipe, name)
+          puts "capture_images(pipe, #{name}"
+          line = ""
+          until line.include?("images saved") && File.exists?("rgb.png") && File.exists?("depth.png")
+            line = pipe.gets
+            # puts line
+          end
+          ["rgb", "depth"].each do |img|
+            fname = "#{name}_#{img}.png"
+            if File.exists? fname
+              File.delete fname
+            end
+            File.rename "./#{img}.png", fname
+          end
+        end
+
         def list_lights
           say controller.devices.map{|d| d.start_address }.inspect
         end
 
         def controller
-          params = {}
+          params = {:count => 2}
           if options[:testing]
             params.merge!(:cmd => "xargs -n1 echo")
           end
