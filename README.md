@@ -2,13 +2,12 @@
 
 [![Build Status](https://secure.travis-ci.org/marshally/ball_of_light.png?branch=master)](http://travis-ci.org/marshally/ball_of_light)
 
-## Contents
-
 1. [Project Goals](#project-goals)
 2. [Example](#example)
 3. [Capabilities](https://github.com/marshally/ball_of_light/blob/master/Capabilities.md)
 4. [Installation](https://github.com/marshally/ball_of_light/blob/master/Installation.md)
 5. [Calibration](https://github.com/marshally/ball_of_light/blob/master/Calibration.md)
+6. [On-site Setup](https://github.com/marshally/ball_of_light/wiki/On-site-Setup)
 
 ## Project Goals
 
