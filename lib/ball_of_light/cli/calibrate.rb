@@ -8,7 +8,7 @@ module BallOfLight
 
         controller.center!
         controller.strobe_open!
-        controller.off!
+        controller.buffer(:dimmer => 0)
 
         points = nil
         points = BallOfLightController.additional_points
@@ -77,6 +77,7 @@ module BallOfLight
       desc "auto", "magic"
       def auto
         start = Time.now
+        controller.instant!(:point => :bottom)
         cmd = "#{ENV['HOME']}/Projects/kinectable_pipe/kinectable_pipe -r 4"
         stdin, stdout, wait = Open3.popen2e(cmd)
 
@@ -87,30 +88,41 @@ module BallOfLight
 
         controller.off!
 
-
         controller.devices.each do |device|
+          controller.bottom!
           controller.dimmer!(0)
           device.dimmer(255)
+          controller.write!
+          pan0, tilt0 = device.current_values
+          puts "bottom at pan:#{pan0}, tilt:#{tilt0}"
+          next unless pan0
+          next unless tilt0
+          4.times do |p|
+            [3, 0, -3].each do |i|
+              pan  = pan0 + (p+1)*i
+              4.times do |t|
+                [1, -1].each do |j|
+                  tilt = tilt0 + t*j
+                  if pan >= 0 && pan <= 255 && tilt >= 0 && tilt <= 255
+                    puts "pan:#{pan} tilt:#{tilt}"
 
-          25.times do |pan|
-            pan  = pan * 10
-            25.times do |tilt|
-              tilt = tilt * 10
-              puts "pan:#{pan} tilt:#{tilt}"
-
-              device.buffer(:tilt => tilt, :pan => pan)
-              controller.write!
-              capture_images(stdout, "#{ENV['HOME']}/.ball_of_light/light_#{1+(device.start_address-1)/5}_pan#{pan}_tilt#{tilt}")
+                    device.buffer(:tilt => tilt, :pan => pan)
+                    sleep(0.1)
+                    controller.write!
+                    capture_images(stdout, "#{ENV['HOME']}/.ball_of_light/light_#{1+(device.start_address-1)/5}_pan#{pan}_tilt#{tilt}")
+                  end
+                end
+              end
             end
           end
         end
 
-        puts "#{Time.now - start} seconds elapsed"
+        say "#{Time.now - start} seconds elapsed"
       end
 
       no_tasks do
         def capture_images(pipe, name)
-          puts "capture_images(pipe, #{name}"
+          say "capture_images(pipe, #{name}"
           line = ""
           until line.include?("images saved") && File.exists?("rgb.png") && File.exists?("depth.png")
             line = pipe.gets
@@ -130,7 +142,7 @@ module BallOfLight
         end
 
         def controller
-          params = {:count => 2}
+          params = {}
           if options[:testing]
             params.merge!(:cmd => "xargs -n1 echo")
           end
