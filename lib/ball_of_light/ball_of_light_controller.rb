@@ -142,6 +142,7 @@ module BallOfLight
           e.yield 255
           e.yield 255
           e.yield 0
+          e.yield 25
           e.yield 50
           e.yield 75
           e.yield 45
