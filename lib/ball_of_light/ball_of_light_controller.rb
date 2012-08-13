@@ -53,7 +53,14 @@ module BallOfLight
     # green_ring  = [3, 4, 8, 9, 10, 6]
 
     def random_color
-      self.colors.shuffle[0]
+      # changed to use .sample
+      # based on: http://stackoverflow.com/questions/3482149/how-do-i-pick-randomly-from-an-array
+      self.colors.sample
+    end
+
+    def points
+      #defines a sequence of named points, in "clockwise" order
+      [:top,:bottom,:north,:east,:south,:west]
     end
 
     def colors
@@ -86,6 +93,18 @@ module BallOfLight
 
     def middle_lights
       [4,5,6,7].map{|i| devices[i]}
+    end
+
+    def light_pairs
+      # returns an array of light pair arrays, opposite each other
+      [
+        [1,9],
+        [2,10],
+        [3,11],
+        [4,12],
+        [5,7],
+        [6,8]
+      ]
     end
 
     def chase_sequence
@@ -128,6 +147,46 @@ module BallOfLight
         end
       end
       animate!(:seconds => 2.5, :point => :bottom)
+    end
+
+    def clockwise(pulse => {})
+      # pulse is a closure style function callback thingy
+
+      # this moves each pair of lights through the various points
+      # set the first pair to the first point, the second pair to the second, etc
+      # sleep for however long it takes that movement
+      # run the pulse callback at the new point
+      # move the first pair to the second point, the second pair to the third, etc.
+      # repeat the move/pulse cycle until all of the pairs have been to all of the points
+    end
+
+    def counterclockwise(pulse => {})
+      #this does the same damn thing as clockwise, only with the points in reverse
+      # worth considering the addition of another callback that controls intensity and gobo of the pairs between movements.
+    end
+
+    def breathe(speed => 1)
+      # set all lights to center
+      # dimmer to 1
+
+      # 40 updates per second
+      steps = speed * 40
+      halfstep = steps / 2
+      halfstep.times do |n|
+        # set dimmer to (255/halfstep)*n
+      end
+      halfstep.times do |n|
+        # set dimmer to 255 - ((255/halfstep)*n)
+      end
+    end
+
+    def randomize
+      [1..12].each do |n|
+        # for light n:
+        # set dimmer to a random between 127 and 255
+        # set point to self.points.sample
+        # set gobo to self.colors.sample
+      end
     end
 
     def heartbeat!
