@@ -2,10 +2,6 @@ require 'thor'
 require 'thor/group'
 require 'io/console'
 
-require File.expand_path(File.dirname(__FILE__) + "/setup")
-require File.expand_path(File.dirname(__FILE__) + "/lights")
-require File.expand_path(File.dirname(__FILE__) + "/calibrate")
-require File.expand_path(File.dirname(__FILE__) + "/kinect")
 
 ["ola_streaming_client", "kinectable_pipe"].each do |exe|
   running = `ps aux | grep #{exe} | grep -v grep`.strip
@@ -17,6 +13,10 @@ require File.expand_path(File.dirname(__FILE__) + "/kinect")
     end
   end
 end
+require File.expand_path(File.dirname(__FILE__) + "/cli/setup")
+require File.expand_path(File.dirname(__FILE__) + "/cli/lights")
+require File.expand_path(File.dirname(__FILE__) + "/cli/calibrate")
+require File.expand_path(File.dirname(__FILE__) + "/cli/kinect")
 
 module BallOfLight
   module CLI
