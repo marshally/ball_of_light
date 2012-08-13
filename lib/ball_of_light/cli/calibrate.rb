@@ -80,11 +80,10 @@ module BallOfLight
         controller.instant!(:point => :bottom)
         cmd = "#{ENV['HOME']}/Projects/kinectable_pipe/kinectable_pipe -r 4"
         stdin, stdout, wait = Open3.popen2e(cmd)
+        stdout.sync = true
+        STDOUT.sync = true
 
-        say "someone should stand in the frame until there is some output"
-        capture_images(stdout, "#{ENV['HOME']}/.ball_of_light/person")
-
-        yes? "is the person out of the frame? (yes)"
+        capture_images(stdout, "#{ENV['HOME']}/.ball_of_light/origin")
 
         controller.off!
 
@@ -97,21 +96,16 @@ module BallOfLight
           puts "bottom at pan:#{pan0}, tilt:#{tilt0}"
           next unless pan0
           next unless tilt0
-          4.times do |p|
-            [3, 0, -3].each do |i|
-              pan  = pan0 + (p+1)*i
-              4.times do |t|
-                [1, -1].each do |j|
-                  tilt = tilt0 + t*j
-                  if pan >= 0 && pan <= 255 && tilt >= 0 && tilt <= 255
-                    puts "pan:#{pan} tilt:#{tilt}"
+          [-9, -6, -3, 0, 3, 6, 9].each do |p|
+            pan  = pan0 + p
+            [-3, -2, -1, 0, 1, 2, 3].each do |t|
+              tilt = tilt0 + t
+              if pan >= 0 && pan <= 255 && tilt >= 0 && tilt <= 255
+                puts "pan:#{pan} tilt:#{tilt}"
 
-                    device.buffer(:tilt => tilt, :pan => pan)
-                    sleep(0.1)
-                    controller.write!
-                    capture_images(stdout, "#{ENV['HOME']}/.ball_of_light/light_#{1+(device.start_address-1)/5}_pan#{pan}_tilt#{tilt}")
-                  end
-                end
+                device.buffer(:tilt => tilt, :pan => pan)
+                controller.write!
+                capture_images(stdout, "#{ENV['HOME']}/.ball_of_light/light_#{1+(device.start_address-1)/5}_pan#{pan}_tilt#{tilt}")
               end
             end
           end
@@ -119,15 +113,20 @@ module BallOfLight
 
         say "#{Time.now - start} seconds elapsed"
       end
-
       no_tasks do
         def capture_images(pipe, name)
           say "capture_images(pipe, #{name}"
           line = ""
-          until line.include?("images saved") && File.exists?("rgb.png") && File.exists?("depth.png")
-            line = pipe.gets
-            # puts line
+
+          ["rgb", "depth"].each do |img|
+            File.delete("#{img}.png") if File.exists?("#{img}.png")
           end
+
+          until File.exists?("rgb.png") && File.exists?("depth.png")
+            line = pipe.gets "\n"
+            sleep(0.5) if line.include?("writing images")
+          end
+
           ["rgb", "depth"].each do |img|
             fname = "#{name}_#{img}.png"
             if File.exists? fname
