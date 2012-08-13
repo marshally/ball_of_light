@@ -2,9 +2,10 @@
 require 'rubygems'
 require 'json'
 
+STDOUT.sync = true
 while(1) do
   start = Time.now
-  File.open("/Users/marshallyount/Projects/kinectable_pipe/samples/test001.txt").each do |line|
+  File.open("123.json").each do |line|
     begin
       data = JSON.parse(line)
       target_time = start + data["elapsed"]

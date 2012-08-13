@@ -7,6 +7,9 @@ require 'json'
 require 'matrix'
 
 require_relative "../lib/ball_of_light"
+
+STDOUT.sync = true
+
 last = 0
 
 STDIN.each do |line|
