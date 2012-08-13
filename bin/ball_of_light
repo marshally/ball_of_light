@@ -1,5 +1,19 @@
 #!/usr/bin/env ruby
-require 'bundler'
+begin
+  require 'bundler'
+rescue LoadError
+  puts "\nERROR:"
+  puts "\nI can't find bundler. You might need to execute:"
+  puts "\nrbenv local 1.9.3-p194"
+  puts "\nrbenv shell 1.9.3-p194"
+  puts "gem install bundler"
+  puts "bundle install --deployment"
+  puts "bin/ball_of_light setup link"
+  exit
+end
+
+ENV['BUNDLE_GEMFILE'] ||= "#{File.dirname(File.realpath(__FILE__))}/../Gemfile"
+
 Bundler.setup
 
 require File.expand_path(File.dirname(File.realpath(__FILE__)) + "/../lib/ball_of_light/cli")
