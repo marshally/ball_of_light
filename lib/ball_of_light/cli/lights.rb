@@ -30,6 +30,15 @@ module BallOfLight
         end
       end
 
+      desc "spiral", "spiral"
+      def spiral
+        controller.instant!(:point => :center)
+        controller.strobe_open!
+        controller.dimmer!(255)
+        controller.spiral_out
+        controller.spiral_in
+      end
+
       desc "capabilities", "display the lights basic capabilities"
       def capabilities
         say controller.capabilities
