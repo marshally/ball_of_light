@@ -2,6 +2,6 @@
 require 'bundler'
 Bundler.setup
 
-require_relative "../lib/ball_of_light/cli/cli"
+require File.expand_path(File.dirname(File.realpath(__FILE__)) + "/../lib/ball_of_light/cli")
 
 BallOfLight::CLI::App.start

@@ -18,8 +18,6 @@ require File.expand_path(File.dirname(__FILE__) + "/kinect")
   end
 end
 
-# Hey you: reader of this code!
-# This is a hacktastic mess.
 module BallOfLight
   module CLI
     class App < Thor
