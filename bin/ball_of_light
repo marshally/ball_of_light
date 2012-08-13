@@ -6,7 +6,7 @@ rescue LoadError
   puts "\nI can't find bundler. You might need to execute:"
   puts "\nrbenv local 1.9.3-p194"
   puts "\nrbenv shell 1.9.3-p194"
-  puts "gem install bundler"
+  puts "gem install vendor/cache/bundler-1.1.5.gem"
   puts "bundle install --deployment"
   puts "bin/ball_of_light setup link"
   exit
