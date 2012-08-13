@@ -18,7 +18,8 @@ controller.on!
 
 # runs for about 90 seconds
 #9.times do
-2.times do
+9.times do |i|
+  puts "factory #{i}"
   # 5s
   # pan left to right 100% of rotation
   controller.buffer(:point => controller.random_color)
