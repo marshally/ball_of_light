@@ -8,7 +8,7 @@ dont_repeat = ENV.include?("FOREVER") ? false : true
 STDOUT.sync = true
 while(1)
   start = Time.now
-  File.open("123.json").each do |line|
+  File.open("#{File.dirname(File.realpath(__FILE__))}/../spec/fixtures/123.json").each do |line|
     begin
       data = JSON.parse(line)
       target_time = start + data["elapsed"]

@@ -12,6 +12,9 @@ test/version_tmp
 tmp
 vendor/bundle
 
+*.png
+*.log
+
 # YARD artifacts
 .yardoc
 _yardoc
