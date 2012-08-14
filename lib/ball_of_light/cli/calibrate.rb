@@ -1,5 +1,6 @@
 require 'thor'
 require 'open3'
+require_relative "../../ball_of_light"
 module BallOfLight
   module CLI
     class Calibrate < Thor
@@ -13,12 +14,12 @@ module BallOfLight
         points = nil
         points = BallOfLightController.additional_points
 
-        name = ask("What is the name of your point?")
+        name = ask("\nWhat is the name of your point?")
 
         number = 0
 
         while(1) do
-          answer = ask("Which light to calibrate? [1-12, (n)ext [#{number+1}] or (q)uit]")
+          answer = ask("\nWhich light to calibrate? [1-12, (n)ext [#{number+1}] or (q)uit]")
           break if ["q", "quit"].include? answer
 
           if answer == "n" || answer == ""
