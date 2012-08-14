@@ -22,6 +22,7 @@ controller = BallOfLight::BallOfLightController.new(options)
   end
 end
 
+controller.buffer(:dimmer => 255)
 controller.spiral_in
 controller.spiral_out
 controller.spiral_in
