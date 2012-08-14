@@ -16,9 +16,14 @@ end
 # setup controller
 controller = BallOfLight::BallOfLightController.new(options)
 
+count = 1800
+
+if ENV["SHORT"]=="true"
+  count = 30
+end
+
 puts "heartbeat!"
-1800.times do
-#30.times do
+count.times do
   begin
     # See if a 'Q' has been typed yet
     c = STDIN.read_nonblock(1)

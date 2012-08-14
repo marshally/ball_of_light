@@ -48,7 +48,7 @@ end
 controller.top_lights.each do |light|
   light.nocolor
   light.dimmer(127)
-  light.bottom
+  light.buffer(:point => :bottom)
 end
 
 # Blue lights dim to very low light as both people approach

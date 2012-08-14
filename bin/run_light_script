@@ -4,62 +4,97 @@ require 'json'
 require 'io/wait'
 require_relative "../lib/ball_of_light/io_helper"
 
-$input = STDIN
-if $input.tty?
-  cmd = ENV['TEST'] ? "bin/kinectable_pipe_sim" : "kinectable_pipe -r 4"
+# if `ps aux | grep kinectable_pipe | grep -v grep`.strip
+#   puts "kinectable_pipe already running!"
+#   exit
+# end
+
+BASEDIR= File.dirname(File.realpath(__FILE__)) + "/"
+if $stdin.tty?
+  cmd = "#{BASEDIR}add_gestures.rb"
+  puts cmd
   nothing, $input = Open3.popen2e(cmd)
+else
+  $input = $stdin
 end
 
-$input.sync
-STDOUT.sync
-
-def run(script)
-  if script == :random
-    script = ["heartbeat.rb", "factory.rb", "factory.rb", "spiral.rb", "chase.rb"].shuffle.first
-    puts "random"
-  end
-
-  puts "running #{script}"
-  cmd = "ruby scripts/#{script} 2>>stderr.log >>stdout.log"
-
-  Open3.popen2e(cmd) do |stdin, stdout, wait|
-    while line = IoHelper.gets_most_recent($input)
-      break if stdin.closed?
-      stdin.puts line
-    end
-    puts "waiting for #{script} to close ..."
-    wait.join
-  end
-end
-
-while(!$input.eof?)
-  line = IoHelper.gets_most_recent($input)
-
-  # we don't know how to interpret these messages, so just skip them
-  next if line.include? "status"
-  next if line.include? "gesture"
-
+def count_skeletons(blob)
   begin
-    skels = JSON.parse(line)
-    if skels["skeletons"]
-      case skels["skeletons"].count
-      when 0
-        script = "0.rb"
-      when 1
-        script = "1.rb"
-      when 2
-        script = "hug.rb"
-      else
-        script = "heartbeat.rb"
+    unless blob.nil?
+      skels = JSON.parse(blob)
+      if skels["skeletons"]
+        # puts "*"*80
+        # puts "found #{skels["skeletons"].count} users"
+        $last_count = skels["skeletons"].count
       end
-
-      run script
-    else
-      run :random
     end
   rescue JSON::ParserError
   end
+end
 
-  run :random
+$input.sync = true
+$stdout.sync = true
+
+def run(script)
+  puts "running #{script}"
+  cmd = "ruby #{BASEDIR}../scripts/#{script} 2>>stderr.log >>stdout.log"
+  Open3.popen2e(cmd) do |stdin, stdout, thread|
+
+    begin
+      while(thread.alive? && !stdin.closed?)
+        last_skeletons = nil
+        # line = IoHelper.gets_most_recent($input)
+        # puts line if line
+        # stdin.puts line if line
+        lines = IoHelper.readall_nonblocking($input)
+        lines.each do |line|
+          next if stdin.closed?
+          stdin.puts line if line
+          $stdout.flush
+
+          # stop script if the number of users has changed
+          count = count_skeletons(line)
+          if count && last_skeletons && last_skeletons != count
+            Thread.kill(thread)
+            puts ">"*80
+            STDOUT.puts "killing thread (#{last_skeletons}, #{count})"
+
+            break
+          end
+
+          last_skeletons = count
+        end
+      end
+      sleep(0.1)
+    rescue Errno::EPIPE
+    end
+    thread.join
+  end
+end
+
+while(!$input.closed?)
+  $stdout.flush
+  $input.flush
+  lines = IoHelper.readall_nonblocking($input)
+
+  lines.reject! do |line|
+    line.nil? || !line.include?("skeletons")
+  end
+
+  case count_skeletons(lines.last)
+  when 0
+    script = "0.rb"
+  when 1
+    script = "1.rb"
+  when 2
+    script = "hug.rb"
+  when nil
+    script = ["heartbeat.rb", "factory.rb", "factory.rb", "spiral.rb", "chase.rb"].sample
+  else
+    script = "heartbeat.rb"
+  end
+
+  run script
+  sleep(0.1)
 end
 

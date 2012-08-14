@@ -1,21 +1,21 @@
 #!/usr/bin/env ruby
 require 'json'
-
+require_relative '../lib/ball_of_light/io_helper'
 last = 0
 output = {:gesture => {:skeleton_count => 0}}
 
-STDOUT.sync = true
-STDOUT.puts output.to_json
+$stdin.sync = true
+$stdout.sync = true
 
-STDIN.each do |line|
-  STDOUT.puts line
+while (line = $stdin.gets)
+  $stdout.puts line
   begin
     blob = JSON.parse(line)
     if blob["skeletons"]
       if blob["skeletons"].count != last
         last = blob["skeletons"].count
         output = {:gesture => {:skeleton_count => last}}
-        STDOUT.puts output.to_json
+        $stdout.puts output.to_json
       end
     end
   rescue JSON::ParserError

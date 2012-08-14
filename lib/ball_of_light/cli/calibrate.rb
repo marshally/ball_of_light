@@ -79,7 +79,7 @@ module BallOfLight
       def auto
         start = Time.now
         controller.instant!(:point => :bottom)
-        cmd = "#{ENV['HOME']}/Projects/kinectable_pipe/kinectable_pipe -r 4"
+        cmd = "kinectable_pipe -r 4 -i -d"
         stdin, stdout, wait = Open3.popen2e(cmd)
         stdout.sync = true
         STDOUT.sync = true

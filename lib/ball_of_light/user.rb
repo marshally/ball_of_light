@@ -11,10 +11,12 @@ class User
     options.symbolize_keys!
 
     self.id = options[:userid]
-    self.joints = options[:joints].inject({}) do |result, j|
-      joint = Joint.new(j)
-      result[joint.name.to_sym] = joint
-      result
+    if options[:joints]
+      self.joints = options[:joints].inject({}) do |result, j|
+        joint = Joint.new(j)
+        result[joint.name.to_sym] = joint
+        result
+      end
     end
   end
 
@@ -23,10 +25,16 @@ class User
   end
 
   def pointing_right
+    return nil if joints[:r_hand].z == joints[:r_elbow].z
+    return nil if joints[:r_shoulder].z == joints[:r_elbow].z
+    return nil if joints[:r_hand].z == joints[:r_shoulder].z
     direction_equivalent(vector_between(:r_hand, :r_elbow), vector_between(:r_elbow, :r_shoulder))
   end
 
   def pointing_left
+    return nil if joints[:l_hand].z     == joints[:l_elbow].z
+    return nil if joints[:l_shoulder].z == joints[:l_elbow].z
+    return nil if joints[:l_hand].z    == joints[:l_shoulder].z
     direction_equivalent(vector_between(:l_hand, :l_elbow), vector_between(:l_elbow, :l_shoulder))
   end
 
@@ -38,7 +46,7 @@ class User
     end
   end
 
-  def direction_equivalent(v1, v2, err=0.15)
+  def direction_equivalent(v1, v2, err=0.20)
     if v1 && v2
       v1n = v1.normalize
       v2n = v2.normalize
