@@ -111,7 +111,7 @@ module BallOfLight
         [:front, :left, :back, :right].each do |direction|
           animate!(:seconds => 0.25,
             :pan  => i*(points[direction][:pan]  - points[:bottom][:pan])  + points[:bottom][:pan],
-            :tilt => i*(points[direction][:tilt] - points[:bottom][:tilt]) + points[:bottom][:tilt],
+            :tilt => i*(points[direction][:tilt] - points[:bottom][:tilt]) + points[:bottom][:tilt]
           )
         end
       end
@@ -123,7 +123,7 @@ module BallOfLight
         [:right, :back, :left, :front].each do |direction|
           animate!(:seconds => 0.25,
             :pan  => i*(points[direction][:pan]  - points[:bottom][:pan])  + points[:bottom][:pan],
-            :tilt => i*(points[direction][:tilt] - points[:bottom][:tilt]) + points[:bottom][:tilt],
+            :tilt => i*(points[direction][:tilt] - points[:bottom][:tilt]) + points[:bottom][:tilt]
           )
         end
       end
