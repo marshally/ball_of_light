@@ -6,7 +6,8 @@ require_relative "../lib/ball_of_light/io_helper"
 
 $input = STDIN
 if $input.tty?
-  nothing, $input = Open3.popen2e("bin/kinectable_pipe_sim")
+  cmd = ENV['TEST'] ? "bin/kinectable_pipe_sim" : "kinectable_pipe -r 4"
+  nothing, $input = Open3.popen2e(cmd)
 end
 
 $input.sync
