@@ -109,10 +109,12 @@ module BallOfLight
       animate!(:seconds => 2.5, :point => :bottom)
       [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].each do |i|
         [:front, :left, :back, :right].each do |direction|
-          animate!(:seconds => 0.25,
-            :pan  => i*(points[direction][:pan]  - points[:bottom][:pan])  + points[:bottom][:pan],
-            :tilt => i*(points[direction][:tilt] - points[:bottom][:tilt]) + points[:bottom][:tilt]
-          )
+          begin_animation!(:seconds => 0.25) do |c|
+            c.devices.each do |device|
+              device.buffer(:pan  => i*(device.points[direction][:pan] - device.points[:bottom][:pan]) + device.points[:bottom][:pan])
+              device.buffer(:tilt => i*(device.points[direction][:tilt] - device.points[:bottom][:tilt]) + device.points[:bottom][:tilt])
+            end
+          end
         end
       end
     end
@@ -121,10 +123,12 @@ module BallOfLight
       animate!(:seconds => 2.5, :point => :right)
       [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1].each do |i|
         [:right, :back, :left, :front].each do |direction|
-          animate!(:seconds => 0.25,
-            :pan  => i*(points[direction][:pan]  - points[:bottom][:pan])  + points[:bottom][:pan],
-            :tilt => i*(points[direction][:tilt] - points[:bottom][:tilt]) + points[:bottom][:tilt]
-          )
+          begin_animation!(:seconds => 0.25) do |c|
+            c.devices.each do |device|
+              device.buffer(:pan  => i*(device.points[direction][:pan]  - device.points[:bottom][:pan]) + device.points[:bottom][:pan])
+              device.buffer(:tilt => i*(device.points[direction][:tilt] - device.points[:bottom][:tilt]) + device.points[:bottom][:tilt])
+            end
+          end
         end
       end
       animate!(:seconds => 2.5, :point => :bottom)
