@@ -1,9 +1,64 @@
 #!/usr/bin/env ruby
+require 'open3'
+require 'json'
+require 'io/wait'
+require_relative "../lib/ball_of_light/io_helper"
 
-while(script = STDIN.gets) do
-  script.strip!
-  f = "./scripts/#{script}.rb"
-  if File.exists?(f)
-    puts `ruby #{f}`
+$input = STDIN
+if $input.tty?
+  nothing, $input = Open3.popen2e("bin/kinectable_pipe_sim")
+end
+
+$input.sync
+STDOUT.sync
+
+def run(script)
+  if script == :random
+    script = ["heartbeat.rb", "factory.rb", "factory.rb", "spiral.rb", "chase.rb"].shuffle.first
+    puts "random"
+  end
+
+  puts "running #{script}"
+  cmd = "ruby scripts/#{script} 2>>stderr.log >>stdout.log"
+
+  Open3.popen2e(cmd) do |stdin, stdout, wait|
+    while line = IoHelper.gets_most_recent($input)
+      break if stdin.closed?
+      stdin.puts line
+    end
+    puts "waiting for #{script} to close ..."
+    wait.join
   end
 end
+
+while(!$input.eof?)
+  line = IoHelper.gets_most_recent($input)
+
+  # we don't know how to interpret these messages, so just skip them
+  next if line.include? "status"
+  next if line.include? "gesture"
+
+  begin
+    skels = JSON.parse(line)
+    if skels["skeletons"]
+      case skels["skeletons"].count
+      when 0
+        script = "0.rb"
+      when 1
+        script = "1.rb"
+      when 2
+        script = "hug.rb"
+      else
+        script = "heartbeat.rb"
+      end
+
+      run script
+    else
+      run :random
+    end
+  rescue JSON::ParserError
+  end
+
+  run :random
+end
+

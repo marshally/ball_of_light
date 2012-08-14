@@ -19,7 +19,7 @@ STDIN.each do |line|
     if blob["skeletons"]
       Scene.new(blob).users.each do |u|
         if v = u.pointing
-          output = {:gesture => {:point => {:x => v[0], :y => v[1], :z => v[2]}}}
+          output = {:gesture => {:userid => u.id, :point => {:x => v[0], :y => v[1], :z => v[2]}}}
           STDOUT.puts output.to_json
         end
       end

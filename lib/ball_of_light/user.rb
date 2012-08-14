@@ -38,15 +38,31 @@ class User
     end
   end
 
-  def direction_equivalent(v1, v2, err=0.25)
+  def direction_equivalent(v1, v2, err=0.15)
     if v1 && v2
       v1n = v1.normalize
       v2n = v2.normalize
       3.times do |i|
-        if (v1n[i] - v2n[i]).abs >= err
+        diff = (v1n[i] - v2n[i]).abs
+        # there is a check against diff=0 here because the depth readings can
+        # get screwed up and start yielding the exact same
+        if diff >= err || diff == 0.0
           return nil
         end
       end
+
+      # STDERR.puts v1.inspect
+      # STDERR.puts v2.inspect
+      # STDERR.puts v1n.inspect
+      # STDERR.puts v2n.inspect
+
+      # STDERR.puts joints[:l_shoulder].inspect
+      # STDERR.puts joints[:l_elbow].inspect
+      # STDERR.puts joints[:l_hand].inspect
+
+      # STDERR.puts joints[:r_shoulder].inspect
+      # STDERR.puts joints[:r_elbow].inspect
+      # STDERR.puts joints[:r_hand].inspect
 
       return v1n
     end
