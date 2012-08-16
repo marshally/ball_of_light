@@ -19,7 +19,9 @@ module BallOfLight
             kill_it = ask "You seem to have an instance of #{exe} running. Do you want me to kill it? (Y/n)"
             unless kill_it.downcase[/\An/]
               pid = running.split(" ")[1]
+              say " killing process:#{pid}, please restart"
               `kill -9 #{pid}`
+              exit
             end
           end
         end

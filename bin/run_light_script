@@ -1,9 +1,100 @@
 #!/usr/bin/env ruby
+require 'open3'
+require 'json'
+require 'io/wait'
+require_relative "../lib/ball_of_light/io_helper"
 
-while(script = STDIN.gets) do
-  script.strip!
-  f = "./scripts/#{script}.rb"
-  if File.exists?(f)
-    puts `ruby #{f}`
+# if `ps aux | grep kinectable_pipe | grep -v grep`.strip
+#   puts "kinectable_pipe already running!"
+#   exit
+# end
+
+BASEDIR= File.dirname(File.realpath(__FILE__)) + "/"
+if $stdin.tty?
+  cmd = "#{BASEDIR}add_gestures.rb"
+  puts cmd
+  nothing, $input = Open3.popen2e(cmd)
+else
+  $input = $stdin
+end
+
+def count_skeletons(blob)
+  begin
+    unless blob.nil?
+      skels = JSON.parse(blob)
+      if skels["skeletons"]
+        # puts "*"*80
+        # puts "found #{skels["skeletons"].count} users"
+        $last_count = skels["skeletons"].count
+      end
+    end
+  rescue JSON::ParserError
   end
 end
+
+$input.sync = true
+$stdout.sync = true
+
+def run(script)
+  puts "running #{script}"
+  cmd = "ruby #{BASEDIR}../scripts/#{script} 2>>stderr.log >>stdout.log"
+  Open3.popen2e(cmd) do |stdin, stdout, thread|
+
+    begin
+      while(thread.alive? && !stdin.closed?)
+        last_skeletons = nil
+        # line = IoHelper.gets_most_recent($input)
+        # puts line if line
+        # stdin.puts line if line
+        lines = IoHelper.readall_nonblocking($input)
+        lines.each do |line|
+          next if stdin.closed?
+          stdin.puts line if line
+          $stdout.flush
+
+          # stop script if the number of users has changed
+          count = count_skeletons(line)
+          if count && last_skeletons && last_skeletons != count
+            Thread.kill(thread)
+            puts ">"*80
+            STDOUT.puts "killing thread (#{last_skeletons}, #{count})"
+
+            break
+          end
+
+          last_skeletons = count
+        end
+      end
+      sleep(0.1)
+    rescue Errno::EPIPE
+    end
+    thread.join
+  end
+end
+
+while(!$input.closed?)
+  $stdout.flush
+  $input.flush
+  lines = IoHelper.readall_nonblocking($input)
+
+  lines.reject! do |line|
+    line.nil? || !line.include?("skeletons")
+  end
+
+  case count_skeletons(lines.last)
+  when 0
+    script = "0.rb"
+  when 1
+    script = "1.rb"
+  when 2
+    script = "hug.rb"
+  when nil
+    script = ["heartbeat.rb", "factory.rb", "factory.rb", "spiral.rb", "chase.rb"].sample
+  else
+    script = "heartbeat.rb"
+  end
+
+  run script
+  sleep(0.1)
+end
+

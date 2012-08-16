@@ -2,17 +2,21 @@
 require 'rubygems'
 require 'json'
 
+should_sleep = ENV.include?("DONTSLEEP") ? false : true
+dont_repeat = ENV.include?("FOREVER") ? false : true
+
 STDOUT.sync = true
-while(1) do
+while(1)
   start = Time.now
-  File.open("123.json").each do |line|
+  File.open("#{File.dirname(File.realpath(__FILE__))}/../spec/fixtures/123.json").each do |line|
     begin
       data = JSON.parse(line)
       target_time = start + data["elapsed"]
       timediff = target_time - Time.now
-      sleep(timediff) if timediff > 0
-      puts data.to_json
+      sleep(timediff) if should_sleep && timediff > 0
+      STDOUT.puts data.to_json
     rescue JSON::ParserError
     end
   end
+  break if dont_repeat
 end

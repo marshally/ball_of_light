@@ -11,10 +11,12 @@ class User
     options.symbolize_keys!
 
     self.id = options[:userid]
-    self.joints = options[:joints].inject({}) do |result, j|
-      joint = Joint.new(j)
-      result[joint.name.to_sym] = joint
-      result
+    if options[:joints]
+      self.joints = options[:joints].inject({}) do |result, j|
+        joint = Joint.new(j)
+        result[joint.name.to_sym] = joint
+        result
+      end
     end
   end
 
@@ -23,10 +25,16 @@ class User
   end
 
   def pointing_right
+    return nil if joints[:r_hand].z == joints[:r_elbow].z
+    return nil if joints[:r_shoulder].z == joints[:r_elbow].z
+    return nil if joints[:r_hand].z == joints[:r_shoulder].z
     direction_equivalent(vector_between(:r_hand, :r_elbow), vector_between(:r_elbow, :r_shoulder))
   end
 
   def pointing_left
+    return nil if joints[:l_hand].z     == joints[:l_elbow].z
+    return nil if joints[:l_shoulder].z == joints[:l_elbow].z
+    return nil if joints[:l_hand].z    == joints[:l_shoulder].z
     direction_equivalent(vector_between(:l_hand, :l_elbow), vector_between(:l_elbow, :l_shoulder))
   end
 
@@ -38,15 +46,31 @@ class User
     end
   end
 
-  def direction_equivalent(v1, v2, err=0.25)
+  def direction_equivalent(v1, v2, err=0.20)
     if v1 && v2
       v1n = v1.normalize
       v2n = v2.normalize
       3.times do |i|
-        if (v1n[i] - v2n[i]).abs >= err
+        diff = (v1n[i] - v2n[i]).abs
+        # there is a check against diff=0 here because the depth readings can
+        # get screwed up and start yielding the exact same
+        if diff >= err || diff == 0.0
           return nil
         end
       end
+
+      # STDERR.puts v1.inspect
+      # STDERR.puts v2.inspect
+      # STDERR.puts v1n.inspect
+      # STDERR.puts v2n.inspect
+
+      # STDERR.puts joints[:l_shoulder].inspect
+      # STDERR.puts joints[:l_elbow].inspect
+      # STDERR.puts joints[:l_hand].inspect
+
+      # STDERR.puts joints[:r_shoulder].inspect
+      # STDERR.puts joints[:r_elbow].inspect
+      # STDERR.puts joints[:r_hand].inspect
 
       return v1n
     end

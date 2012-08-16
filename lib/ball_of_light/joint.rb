@@ -10,10 +10,9 @@ class Joint
     options.symbolize_keys!
 
     [:x, :y, :z, :X, :Y, :Z].each do |i|
-      if options[i]==0.0
-        options[i] = options[i].to_f
-      end
-      unless options[i].nil?
+      if options[i].nil? || options[i]==0.0
+        options.delete(i)
+      else
         options[i] = options[i].to_f
       end
     end
@@ -26,7 +25,9 @@ class Joint
 
   def vector
     if self.x && self.y && self.z
-      Vector[self.x, self.y, self.z]
+      if self.x!=0.0 && self.y!=0.0 && self.z!=0.0
+        Vector[self.x, self.y, self.z]
+      end
     end
   end
 end

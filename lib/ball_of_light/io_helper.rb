@@ -4,7 +4,8 @@ class IoHelper
     read_ready, write_ready = IO.select([io], nil, nil, 0)
     while read_ready && read = read_ready[0]
       break if read.eof?
-      STDOUT.flush
+      break if read.closed?
+
       line = read.gets
       read_ready, write_ready = IO.select([io], nil, nil, 0)
     end
@@ -16,7 +17,8 @@ class IoHelper
     read_ready, write_ready = IO.select([io], nil, nil, 0)
     while read_ready && read = read_ready[0]
       break if read.eof?
-      STDOUT.flush
+      break if read.closed?
+
       lines << read.gets
       read_ready, write_ready = IO.select([io], nil, nil, 0)
     end

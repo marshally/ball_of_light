@@ -14,6 +14,8 @@ vendor/bundle
 
 # Sublime Text 2 crap
 *.sublime-*
+*.png
+*.log
 
 # YARD artifacts
 .yardoc

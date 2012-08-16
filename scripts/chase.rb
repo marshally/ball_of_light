@@ -17,14 +17,24 @@ controller = BallOfLight::BallOfLightController.new(options)
 
 #####################################################################
 
+puts "chase!"
 
 controller.off!
+
 controller.center!
-# sequence = [5, 10, 11, 7, 4, 1, 8, 12, 11, 6, 2, 5, 9, 12, 7, 3, 6, 10, 9, 8, 4, 1]
+# chase_sequence = [5, 10, 11, 7, 4, 1, 8, 12, 11, 6, 2, 5, 9, 12, 7, 3, 6, 10, 9, 8, 4, 1]
 
 last = nil
 count = controller.chase_sequence.count
-[32.0, 24.0, 16.0, 12.0, 8.0, 6.0, 4.0, 2.0, 2.0, 2.0, 2.0].each do |duration|
+
+durations = [32.0, 24.0, 16.0, 12.0, 8.0, 6.0, 4.0, 2.0, 2.0, 2.0, 2.0]
+
+if ENV["SHORT"]="true"
+  durations = [2.0, 2.0]
+end
+
+
+durations.each do |duration|
   controller.chase_sequence.each do |light|
     # change colors here
     controller.buffer(:point => controller.random_color)
@@ -42,7 +52,7 @@ count = controller.chase_sequence.count
 end
 
 controller.strobe_open
-controller.on!
+controller.instant!(:dimmer => 255)
 
 controller.animate!(:seconds => 2) do |animate|
   animate.buffer(:dimmer => 1)
