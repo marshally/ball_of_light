@@ -56,8 +56,12 @@ controller.heartbeat!
 # Begin Kinect body detection routine
 reset_colors(controller)
 
-def pointing_at(v)
-  return rand(12)
+def pointing_at(v, c)
+  if v["x"] < 0
+    c.right_lights
+  else
+    c.left_lights
+  end
 end
 
 start = Time.now
@@ -76,16 +80,12 @@ while(1)
     begin
       blob = JSON.parse(line)
       if blob["gesture"]
-        if blob["gesture"]["point"]
+        if blob["gesture"]["facing"]
           puts line
-          direction = blob["gesture"]["point"]
-          lightnum = pointing_at(direction)
-          if lightnum != last_pointed_at
-            last_pointed_at = lightnum
-            last_point_time = Time.now
+          # {"gesture":{"userid":0,"facing":{"x":-0.6985372894594434,"y":-0.6771431426207392,"z":-0.2313499938110291}}}
 
-            light = controller.devices[lightnum]
-
+          direction = blob["gesture"]["facing"]
+          pointing_at(direction, controller).each do |light|
             puts "FOUND LIGHT #{light}"
 
             controller.buffer(:dimmer => 127)

@@ -88,6 +88,14 @@ module BallOfLight
       [4,5,6,7].map{|i| devices[i]}
     end
 
+    def left_lights
+      [0,3,7,8,11].map{|i| devices[i]}
+    end
+
+    def right_lights
+      [1,2,5,9,10].map{|i| devices[i]}
+    end
+
     def chase_sequence
       [
         4, 9, 10, 6, 3, 0,
