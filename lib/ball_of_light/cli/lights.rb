@@ -39,6 +39,13 @@ module BallOfLight
         controller.spiral_in
       end
 
+      desc "rotate", "rotate clockwise"
+      def rotate
+        controller.clockwise do
+          controller.devices.each {|light| light.buffer(:point => controller.colors.sample)}
+        end
+      end
+
       desc "capabilities", "display the lights basic capabilities"
       def capabilities
         say controller.capabilities
@@ -56,7 +63,7 @@ module BallOfLight
 
         def controller
           params = {}
-          if options[:testing]
+          if ENV["VERBOSE"]=="true"
             params.merge!(:cmd => "xargs -n1 echo")
           end
           @controller ||= BallOfLight::BallOfLightController.new params

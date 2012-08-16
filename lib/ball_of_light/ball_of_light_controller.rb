@@ -53,13 +53,11 @@ module BallOfLight
     # green_ring  = [3, 4, 8, 9, 10, 6]
 
     def random_color
-      # changed to use .sample
-      # based on: http://stackoverflow.com/questions/3482149/how-do-i-pick-randomly-from-an-array
       self.colors.sample
     end
 
-    def points
-      #defines a sequence of named points, in "clockwise" order
+    def clockwise_points
+      # defines a sequence of named points, in "clockwise" order
       [:top,:bottom,:north,:east,:south,:west]
     end
 
@@ -98,12 +96,12 @@ module BallOfLight
     def light_pairs
       # returns an array of light pair arrays, opposite each other
       [
+        [0,8],
         [1,9],
         [2,10],
         [3,11],
-        [4,12],
-        [5,7],
-        [6,8]
+        [4,6],
+        [5,7]
       ]
     end
 
@@ -153,23 +151,43 @@ module BallOfLight
       animate!(:seconds => 2.5, :point => :bottom)
     end
 
-    def clockwise(pulse => {})
-      # pulse is a closure style function callback thingy
-
+    def rotate(pts, &block)
       # this moves each pair of lights through the various points
       # set the first pair to the first point, the second pair to the second, etc
       # sleep for however long it takes that movement
       # run the pulse callback at the new point
       # move the first pair to the second point, the second pair to the third, etc.
       # repeat the move/pulse cycle until all of the pairs have been to all of the points
+
+      pairs = light_pairs
+
+      pts.count.times do
+        begin_animation!(:seconds => 2) do |c|
+          pairs.count.times do |i|
+            pairs[i].each do |light|
+              c.devices[light].buffer(:point => pts[i])
+            end
+          end
+        end
+
+        block.call(self) if block
+        pairs.rotate!
+      end
     end
 
-    def counterclockwise(pulse => {})
+    def clockwise(&block)
       #this does the same damn thing as clockwise, only with the points in reverse
       # worth considering the addition of another callback that controls intensity and gobo of the pairs between movements.
+      rotate(clockwise_points, &block)
     end
 
-    def breathe(speed => 1)
+    def counterclockwise(&block)
+      #this does the same damn thing as clockwise, only with the points in reverse
+      # worth considering the addition of another callback that controls intensity and gobo of the pairs between movements.
+      rotate(clockwise_points.reverse, block)
+    end
+
+    def breathe(speed = 1)
       # set all lights to center
       # dimmer to 1
 

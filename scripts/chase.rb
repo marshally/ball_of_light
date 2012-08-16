@@ -29,7 +29,7 @@ count = controller.chase_sequence.count
 
 durations = [32.0, 24.0, 16.0, 12.0, 8.0, 6.0, 4.0, 2.0, 2.0, 2.0, 2.0]
 
-if ENV["SHORT"]="true"
+if ENV["SHORT"]=="true"
   durations = [2.0, 2.0]
 end
 
