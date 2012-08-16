@@ -24,9 +24,17 @@ end
 
 controller.buffer(:dimmer => 255)
 controller.buffer(:point => controller.colors.sample)
-controller.spiral_in
+controller.clockwise do
+  controller.devices.each {|light| light.buffer(:point => controller.colors.sample)}
+end
 if ENV["SHORT"]!="true"
-  controller.spiral_out
-  controller.spiral_in
-  controller.spiral_out
+  controller.counterclockwise do
+    controller.devices.each {|light| light.buffer(:point => controller.colors.sample)}
+  end
+  controller.clockwise do
+    controller.devices.each {|light| light.buffer(:point => controller.colors.sample)}
+  end
+  controller.counterclockwise do
+    controller.devices.each {|light| light.buffer(:point => controller.colors.sample)}
+  end
 end

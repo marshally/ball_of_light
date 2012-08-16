@@ -99,12 +99,7 @@ while(1)
     end
   end
 
-  # if (Time.now - last_point_time) > 2
-  #   last_pointed_at = nil
-  #   reset_colors(controller)
-  # end
-
   controller.animate!(:seconds => 0.05, :dimmer => controller.heartbeat.next)
-  break if (Time.now - start) > 180
+  break if (Time.now - last_point_time) > 20
 end
 

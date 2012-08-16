@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+  #!/usr/bin/env ruby
 require 'bundler'
 Bundler.setup
 
@@ -17,14 +17,18 @@ end
 controller = BallOfLight::BallOfLightController.new(options)
 
 count = 1800
+controller.buffer(:point => :red)
 
 if ENV["SHORT"]=="true"
-  count = 30
+  count = 360
 end
 
 puts "heartbeat!"
-count.times do
+count.times do |i|
   begin
+    if i % 60 == 0
+      controller.buffer(:point => controller.colors.sample)
+    end
     # See if a 'Q' has been typed yet
     c = STDIN.read_nonblock(1)
     case c.downcase

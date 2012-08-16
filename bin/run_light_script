@@ -89,7 +89,7 @@ while(!$input.closed?)
   when 2
     script = "hug.rb"
   when nil
-    script = ["heartbeat.rb", "factory.rb", "factory.rb", "spiral.rb", "chase.rb"].sample
+    script = ["heartbeat.rb", "breathe.rb", "randomize.rb", "factory.rb", "factory.rb", "spiral.rb", "chase.rb","clock.rb"].sample
   else
     script = "heartbeat.rb"
   end

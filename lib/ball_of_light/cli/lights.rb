@@ -41,6 +41,10 @@ module BallOfLight
 
       desc "rotate", "rotate clockwise"
       def rotate
+        controller.devices.each {|light| light.buffer(:point => controller.colors.sample)}
+        controller.instant!(:point => :center)
+        controller.strobe_open!
+        controller.dimmer!(255)
         controller.clockwise do
           controller.devices.each {|light| light.buffer(:point => controller.colors.sample)}
         end

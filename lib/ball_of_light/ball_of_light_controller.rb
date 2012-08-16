@@ -58,7 +58,7 @@ module BallOfLight
 
     def clockwise_points
       # defines a sequence of named points, in "clockwise" order
-      [:top,:bottom,:north,:east,:south,:west]
+      [:center,:bottom,:back,:right,:front,:left]
     end
 
     def colors
@@ -124,12 +124,17 @@ module BallOfLight
 
     def spiral_out
       animate!(:seconds => 2.5, :point => :bottom)
+
       [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].each do |i|
+        color = colors.sample
         [:front, :left, :back, :right].each do |direction|
-          begin_animation!(:seconds => 0.25) do |c|
+          begin_animation!(:seconds => 0.5) do |c|
             c.devices.each do |device|
-              device.buffer(:pan  => i*(device.points[direction][:pan] - device.points[:bottom][:pan]) + device.points[:bottom][:pan])
-              device.buffer(:tilt => i*(device.points[direction][:tilt] - device.points[:bottom][:tilt]) + device.points[:bottom][:tilt])
+              device.buffer(:point => color)
+              if device.points[direction] && device.points[:bottom]
+                device.buffer(:pan  => i*(device.points[direction][:pan]  - device.points[:bottom][:pan]) + device.points[:bottom][:pan])
+                device.buffer(:tilt => i*(device.points[direction][:tilt] - device.points[:bottom][:tilt]) + device.points[:bottom][:tilt])
+              end
             end
           end
         end
@@ -139,11 +144,15 @@ module BallOfLight
     def spiral_in
       animate!(:seconds => 2.5, :point => :right)
       [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1].each do |i|
+        color = colors.sample
         [:right, :back, :left, :front].each do |direction|
-          begin_animation!(:seconds => 0.25) do |c|
+          begin_animation!(:seconds => 0.5) do |c|
             c.devices.each do |device|
-              device.buffer(:pan  => i*(device.points[direction][:pan]  - device.points[:bottom][:pan]) + device.points[:bottom][:pan])
-              device.buffer(:tilt => i*(device.points[direction][:tilt] - device.points[:bottom][:tilt]) + device.points[:bottom][:tilt])
+              device.buffer(:point => color)
+              if device.points[direction] && device.points[:bottom]
+                device.buffer(:pan  => i*(device.points[direction][:pan]  - device.points[:bottom][:pan]) + device.points[:bottom][:pan])
+                device.buffer(:tilt => i*(device.points[direction][:tilt] - device.points[:bottom][:tilt]) + device.points[:bottom][:tilt])
+              end
             end
           end
         end
@@ -184,7 +193,7 @@ module BallOfLight
     def counterclockwise(&block)
       #this does the same damn thing as clockwise, only with the points in reverse
       # worth considering the addition of another callback that controls intensity and gobo of the pairs between movements.
-      rotate(clockwise_points.reverse, block)
+      rotate(clockwise_points.reverse, &block)
     end
 
     def breathe(speed = 1)
@@ -192,22 +201,21 @@ module BallOfLight
       # dimmer to 1
 
       # 40 updates per second
-      steps = speed * 40
-      halfstep = steps / 2
-      halfstep.times do |n|
-        # set dimmer to (255/halfstep)*n
-      end
-      halfstep.times do |n|
-        # set dimmer to 255 - ((255/halfstep)*n)
-      end
+      animate!(:seconds => speed/2, :dimmer => 255)
+      animate!(:seconds => speed/2, :dimmer => 1)
     end
 
     def randomize
-      [1..12].each do |n|
-        # for light n:
-        # set dimmer to a random between 127 and 255
-        # set point to self.points.sample
-        # set gobo to self.colors.sample
+      begin_animation!(:seconds => 3) do |c|
+        (0..11).each do |light|
+          # for light n:
+          # set dimmer to a random between 127 and 255
+          # set point to self.points.sample
+          # set gobo to self.colors.sample
+          c.devices[light].buffer(:point => clockwise_points.sample)
+          c.devices[light].buffer(:dimmer => rand(127)+127)
+          c.devices[light].buffer(:point => colors.sample)
+        end
       end
     end
 
