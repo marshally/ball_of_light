@@ -6,6 +6,7 @@ require File.expand_path(File.dirname(__FILE__) + "/cli/setup")
 require File.expand_path(File.dirname(__FILE__) + "/cli/lights")
 require File.expand_path(File.dirname(__FILE__) + "/cli/calibrate")
 require File.expand_path(File.dirname(__FILE__) + "/cli/kinect")
+require File.expand_path(File.dirname(__FILE__) + "/cli/upgrade")
 
 module BallOfLight
   module CLI
@@ -35,4 +36,5 @@ BallOfLight::CLI::App.register(BallOfLight::CLI::Setup, "setup", "setup", "setup
 BallOfLight::CLI::App.register(BallOfLight::CLI::Calibrate, "calibrate", "calibrate", "calibrate to environment")
 BallOfLight::CLI::App.register(BallOfLight::CLI::Lights, "lights", "lights", "control lights")
 BallOfLight::CLI::App.register(BallOfLight::CLI::Kinect, "kinect", "kinect", "control kinect")
+BallOfLight::CLI::App.register(BallOfLight::CLI::Upgrade, "upgrade", "upgrade", "upgrade ball of light software")
 
