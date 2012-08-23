@@ -18,7 +18,7 @@
 # end
 
 every 1.minute do
-  command File.expand_path(File.dirname(__FILE__)) + "/../bin/start_tunnel.sh"
+  command File.expand_path(File.dirname(__FILE__)) + "/../bin/maintain_tunnel.rb"
 end
 
 # Learn more: http://github.com/javan/whenever
