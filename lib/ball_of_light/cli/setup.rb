@@ -18,8 +18,13 @@ module BallOfLight
       end
 
       desc "tunnel", "create ssh tunnel"
+      method_option :auto, :aliases => "-a", :desc => "use autossh"
       def tunnel
-        `whenever -w`
+        if options[:auto]
+          `autossh -M 2115 -N -R 2114:localhost:22 marshally@yountlabs.com`
+        else
+          `ssh -fN -R 2114:localhost:22 marshally@yountlabs.com`
+        end
       end
 
       desc "test", "runs tests (specify with --only kinect dmx ola)"
