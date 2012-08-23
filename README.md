@@ -76,3 +76,5 @@ puts controller.points
 
 # For example, :center is the same as {:pan => 127, :tilt => 127}
 ```
+
+
