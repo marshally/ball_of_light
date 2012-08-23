@@ -18,16 +18,22 @@ module BallOfLight
       method_option :force, :type => :boolean, :defaults => false #, :desc => "Use flexible OLA configuration file (default: false)", :banner => "false"
       def all
         fetch
+        FileUtils.cd File.dirname(__FILE__) do
+          uncommitted_chamges = `git diff`.strip
+          ahead_origin = `git log origin/master...HEAD --right-only 2> /dev/null | grep '^commit'`.strip
+          behind_origin = `git log origin/master...HEAD --left-only 2> /dev/null | grep '^commit'`.strip
 
-        ahead_origin = `git log origin/master...HEAD --right-only 2> /dev/null | grep '^commit'`.strip
-        behind_origin = `git log origin/master...HEAD --left-only 2> /dev/null | grep '^commit'`.strip
-
-        if behind_origin != ""
-          say "You have unpushed changes in your local tree. Cannot automatically upgrade."
-        elsif options[:force] || ahead_origin != ""
-          say "You are missing some upstream changes."
-          unless no? "Would you like to upgrade? (Y/n)" || options[:force]
-            run "git pull origin master"
+          if uncommitted_chamges != ""
+            say "You have uncommitted changes in your local tree. Cannot automatically upgrade."
+          elsif ahead_origin != ""
+            say "You have unpushed changes in your local tree. Cannot automatically upgrade."
+          elsif options[:force] || behind_origin != ""
+            say "You are missing some upstream changes."
+            if options[:force] || !no?("Would you like to upgrade? (Y/n)")
+              run "git pull origin master"
+            end
+          else
+            say "No upstream changes to pull"
           end
         end
       end
