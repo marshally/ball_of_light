@@ -17,6 +17,11 @@ module BallOfLight
         create_link "/usr/local/bin/ball_of_light", "#{Dir.pwd}/bin/ball_of_light", :force => true
       end
 
+      desc "tunnel", "create ssh tunnel"
+      def tunnel
+        `whenever -w`
+      end
+
       desc "test", "runs tests (specify with --only kinect dmx ola)"
       method_option :only, :aliases => "--only", :desc => "component to test, e.g. -s kinect dmx ola"
       def test
