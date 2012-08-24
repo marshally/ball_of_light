@@ -55,9 +55,10 @@ def run(script)
           # stop script if the number of users has changed
           count = count_skeletons(line)
           if count && last_skeletons && last_skeletons != count
-            Thread.kill(thread)
             puts ">"*80
-            STDOUT.puts "killing thread (#{last_skeletons}, #{count})"
+            $stdout.puts "User count changed: switching scripts (prev: #{last_skeletons}, next: #{count})"
+            $stdout.flush
+            Thread.kill(thread)
 
             break
           end
