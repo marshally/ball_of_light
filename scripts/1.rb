@@ -91,8 +91,8 @@ while(1)
             controller.buffer(:dimmer => 127)
             light.white
             light.buffer(:dimmer => 255)
-            controller.write!
           end
+          controller.write!
         end
       end
     rescue JSON::ParserError
