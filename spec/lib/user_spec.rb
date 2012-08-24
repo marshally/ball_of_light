@@ -16,7 +16,7 @@ module BallOfLight
           j.y.should == 456.0
           j.z.should == 789.0
 
-          u.to_json.should == "{\"userid\":1,\"joints\":{\"joint\":\"head\",\"X\":123.0,\"Y\":456.0,\"Z\":789.0}}"
+          u.to_json.should == "{\"userid\":1,\"joints\":[{\"joint\":\"head\",\"X\":123.0,\"Y\":456.0,\"Z\":789.0}]}"
         end
 
         it "should handle kinectable_pipe's format" do
@@ -29,7 +29,7 @@ module BallOfLight
           j.y.should == 456.0
           j.z.should == 789.0
 
-          u.to_json.should == "{\"userid\":1,\"joints\":{\"joint\":\"head\",\"X\":123.0,\"Y\":456.0,\"Z\":789.0}}"
+          u.to_json.should == "{\"userid\":1,\"joints\":[{\"joint\":\"head\",\"X\":123.0,\"Y\":456.0,\"Z\":789.0}]}"
         end
 
         it "should decode JSON" do

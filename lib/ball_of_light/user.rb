@@ -34,40 +34,22 @@ class User
     end
   end
 
-  # FIXME
-  # so fugly
-  def joints_as_json
-    unless self.joints.empty?
-      {:joints => self.joints.inject({}){|result, j| result[j.first.to_sym] = j.last.as_json}}
-    else
-      {}
-    end
-  end
-
-  def gestures_as_json
-    unless self.gestures.empty?
-      {:gestures => self.gestures.map{|j| j.as_json}}
-    else
-      {}
-    end
-  end
-
-  def points_as_json
+  def center_of_mass
     if (self.x && self.y && self.z)
       {
         :X => self.x,
         :Y => self.y,
         :Z => self.z,
       }
-    else
-      {}
     end
   end
 
   def as_json
     {
-      :userid => self.id
-    }.merge(joints_as_json).merge(gestures_as_json).merge(points_as_json)
+      :userid => self.id,
+      :gestures => self.gestures,
+      :joints => self.joints.inject([]){|result, j| result << j.last.as_json}
+    }.merge(center_of_mass || {}).reject{|k,v| v == [] || v == {}}
   end
 
   # FIXME: this seems unnecessary?!?
