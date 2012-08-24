@@ -19,7 +19,7 @@ cmd = ENV["KINECT_CMD"] || "kinectable_pipe"
 gestures.unshift cmd
 
 nothing, $input = Open3.popen2e(gestures.join " | ")
-# read_pipe, thread_wait = Open3.op(cmd, "ruby #{basedir}gestures/count_users.rb", "ruby #{basedir}gestures/pointing.rb")
+# read_pipe, thread_wait = Open3.op(cmd, "ruby #{basedir}gestures/pointing.rb")
 $input.sync = true
 
 while line = $input.gets
