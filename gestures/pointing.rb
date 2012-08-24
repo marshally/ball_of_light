@@ -14,17 +14,24 @@ $stdin.sync = true
 last = 0
 
 $stdin.each do |line|
-  $stdout.puts line
+  wrote = false
   begin
     blob = JSON.parse(line)
     if blob["skeletons"]
-      Scene.new(blob).users.each do |u|
+      scene = Scene.new(blob)
+
+      scene.users.each do |u|
         if v = u.pointing
-          output = {:gesture => {:userid => u.id, :point => {:x => v[0], :y => v[1], :z => v[2]}}}
-          $stdout.puts output.to_json
+          u.gestures << {:pointing => {:x => v[0], :y => v[1], :z => v[2]}}
         end
       end
+
+      $stdout.puts scene.to_json
+      wrote = true
     end
   rescue JSON::ParserError
   end
+
+#  $stdout.puts line unless wrote
+
 end

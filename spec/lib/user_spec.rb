@@ -43,11 +43,32 @@ module BallOfLight
         end
 
         it "should handle bad JSON encoding from kinectable_pipe 0.0.4" do
-
           u = User.new(:blob => '{"userid":3,"joints":[{"userid":7,"X":595.137,"Y":97.901,"Z":1158.847}]}')
 
           u.joints.empty?.should == true
+          u.center_of_mass[:X].should == 595.137
+          u.id.should == 7
+
+          u.to_json.should == "{\"userid\":7,\"X\":595.137,\"Y\":97.901,\"Z\":1158.847}"
         end
+
+        it "should decode center of mass format JSON" do
+          u = User.new(:blob => "{\"userid\":7,\"X\":595.137,\"Y\":97.901,\"Z\":1158.847}")
+
+          u.to_json.should == "{\"userid\":7,\"X\":595.137,\"Y\":97.901,\"Z\":1158.847}"
+        end
+      end
+    end
+
+    describe ".facing" do
+      context "when facing a direction" do
+          u = User.new(:userid => 1,
+                       :joints => [
+                                    {:name => "head",       :x =>  1, :y => 2, :z => 1},
+                                    {:name => "l_shoulder", :x =>  2, :y => 1, :z => 1},
+                                    {:name => "r_shoulder", :x => -3, :y => 1, :z => 1},
+                                  ])
+          u.facing.should == Vector[0.0, 0.0, 1.0]
       end
     end
 
@@ -63,7 +84,6 @@ module BallOfLight
         u.right_fore_arm_vector.should == Vector[1.0, 1.0, 1.0]
       end
     end
-
 
     describe ".pointing" do
       context "when pointing at something" do

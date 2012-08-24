@@ -6,7 +6,7 @@ require 'json'
 class User
   attr_accessor :id, :joints, :gestures, :x, :y, :z
   def initialize(options = {})
-    self.gestures = []
+    self.gestures = options[:gestures] || []
     if options[:blob]
       blob = JSON.parse options[:blob]
       options.merge! blob
@@ -20,6 +20,12 @@ class User
         if j[:joint] || j[:name]
           joint = Joint.new(j)
           result[joint.name.to_sym] = joint
+        elsif j[:userid]
+          # this is an error case due to bug in kinectable_pipe 0.0.4
+          self.id = j[:userid]
+          self.x = j[:X]
+          self.y = j[:Y]
+          self.z = j[:Z]
         end
         result
       end
@@ -59,6 +65,25 @@ class User
 
   def pointing
     pointing_right || pointing_left
+  end
+
+  def facing
+    head = joints[:head].vector
+    r_shoulder = joints[:r_shoulder].vector
+    l_shoulder = joints[:l_shoulder].vector
+
+    if head && l_shoulder && r_shoulder
+      left = l_shoulder - head
+      right = r_shoulder - head
+      cross_product(right, left).normalize
+    end
+  end
+
+  def cross_product(v, w)
+    x = v[1]*w[2] - v[2]*w[1]
+    y = v[2]*w[0] - v[0]*w[2]
+    z = v[0]*w[1] - v[1]*w[0]
+    Vector[x,y,z]
   end
 
   def pointing_right
