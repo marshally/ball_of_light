@@ -35,6 +35,7 @@ controller = BallOfLight::BallOfLightController.new(options)
 # colors to produce a chaotic colorful light show.  This could continue until the
 # two people are no longer touching each other.
 
+$stdout.puts "begin hug.rb"
 
 controller.origin!
 
@@ -51,18 +52,41 @@ controller.top_lights.each do |light|
   light.buffer(:point => :bottom)
 end
 
+$stdin.sync = true
+$stdout.sync = true
+
+start_time = Time.now
 # Blue lights dim to very low light as both people approach
+while(1)
+  break if $stdin.closed?
+  lines = IoHelper.readall_nonblocking($stdin)
 
-# while (distance = STDIN.gets)
-#   # 4000 ~= 127
-#   #    0 = 0
-#   value = somefunction(distance)
-#   [1,2,3,4,5,6,7,8].each do |light|
-#     controller.devices[light].dimmer!(value)
-#   end
+  lines.reject!{|line| !line.include?("skeletons")}
 
-#   break if value < 100
-# end
+  if line = lines.last
+    begin
+      scene = Scene.new(:blob => line)
+      users = scene.users
+      if scene.users.count > 1
+        distance = (scene.users.first.joints[:head].vector - scene.users.last.joints[:head].vector).magnitude
+        puts "hug distance: #{distance}"
+        break if distance.magnitude < 100
+
+        value = distance * 127 / 4000
+        puts "hug value: #{value}"
+        controller.top_lights.each do |light|
+          light.buffer(:dimmer => value)
+        end
+        controller.animate!(:seconds => 0.1)
+      end
+    rescue JSON::ParserError
+    end
+  else
+    sleep(0.1)
+  end
+
+  break if (Time.now - start_time) > 60
+end
 
 # at contact all lights go white
 
