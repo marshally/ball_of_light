@@ -26,7 +26,21 @@ module BallOfLight
             end
           end
         end
+      end
 
+      desc "versions", "switch to a specific version"
+      def versions(tag=nil)
+        tags = `git tag -l`.split
+
+        unless tag
+          say "Versions available:\n\t#{tags.join "\n\t"}"
+        else
+          if tags.include? tag
+            result = `git checkout #{tag}`
+          else
+            say "Couldn't find tag #{tag}"
+          end
+        end
       end
     end
   end
