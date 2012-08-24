@@ -5,7 +5,7 @@ Bundler.setup
 require_relative '../lib/ball_of_light'
 
 # This script is for:
-# If no one is in the field
+# If one person is in the field
 
 options = {}
 if ENV['TEST']
@@ -22,6 +22,9 @@ $stdout.sync = true
 def reset_colors(c)
   # Bottom lights point straight up and turn blue. This should be about 45 degrees.
   # (This acknowledges the person and points the lights away from the person’s eyes.)
+  c.buffer(:dimmer => 255)
+  c.white
+
   c.bottom_lights.each do |light|
     light.buffer(:point => :top)
     light.blue
@@ -56,17 +59,29 @@ controller.heartbeat!
 # Begin Kinect body detection routine
 reset_colors(controller)
 
-def pointing_at(v, c)
-  if v["x"] < 0
-    c.right_lights
-  else
-    c.left_lights
-  end
+def light_vectors
+  @light_vectors = {
+    1 => Vector[-1,0,-1].normalize,
+    2 => Vector[1,0,-1].normalize,
+    3 => Vector[1,0,1].normalize,
+    4 => Vector[-1,0,1].normalize,
+
+    5 => Vector[0,0,-1].normalize,
+    6 => Vector[1,0,0].normalize,
+    7 => Vector[0,0,1].normalize,
+    8 => Vector[-1,0,0].normalize
+  }
+end
+
+def pointing_at(v)
+  dir = Vector[v["x"], v["y"], v["z"]].normalize
+
+  differences = light_vectors.merge(light_vectors){|k,v|dir - v}
+  closest = differences.keys.sort{|x,y| differences[x].magnitude <=> differences[y].magnitude}.first
 end
 
 start = Time.now
-last_point_time = Time.now
-last_pointed_at = nil
+last_write = Time.now
 $stdin.sync = true
 while(1)
 
@@ -78,22 +93,33 @@ while(1)
 
   IoHelper.readall_nonblocking($stdin).each do |line|
     begin
-      blob = JSON.parse(line)
-      if blob["gesture"]
-        if blob["gesture"]["facing"]
-          puts line
-          # {"gesture":{"userid":0,"facing":{"x":-0.6985372894594434,"y":-0.6771431426207392,"z":-0.2313499938110291}}}
+      if line.include? "skeletons"
+        scene = Scene.new(:blob => line)
 
-          direction = blob["gesture"]["facing"]
-          pointing_at(direction, controller).each do |light|
-            puts "FOUND LIGHT #{light}"
+        lights_facing = []
 
-            controller.buffer(:dimmer => 127)
-            light.white
-            light.buffer(:dimmer => 255)
+        # which lights are being faced?
+        scene.users.each do |user|
+          user.gestures.each do |gesture|
+            if gesture["gesture"] && gesture["gesture"]["facing"]
+              lights_facing << pointing_at(gesture["gesture"]["facing"])
+            end
           end
-          controller.write!
         end
+
+        reset_colors(controller)
+        lights_facing.flatten.each do |light_num|
+          light = controller.devices[light_num]
+
+          puts "FOUND LIGHT #{light_num}"
+
+          controller.buffer(:dimmer => 127)
+          light.white
+          light.buffer(:dimmer => 255)
+        end
+        controller.write!
+        last_write = Time.now
+
       end
     rescue JSON::ParserError
     end
@@ -105,6 +131,7 @@ while(1)
   # end
 
   controller.animate!(:seconds => 0.05, :dimmer => controller.heartbeat.next)
+  break if (Time.now - last_write) > 15
   break if (Time.now - start) > 180
 end
 
