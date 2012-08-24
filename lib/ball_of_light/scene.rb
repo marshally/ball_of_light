@@ -15,4 +15,12 @@ class Scene
   def users
     @users
   end
+
+  def as_json
+    {:skeletons => users.map(&:as_json)}
+  end
+
+  def to_json
+    as_json.to_json
+  end
 end

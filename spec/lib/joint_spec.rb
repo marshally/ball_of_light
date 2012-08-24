@@ -10,6 +10,8 @@ module BallOfLight
           j.x.should == 123.0
           j.y.should == 456.0
           j.z.should == 789.0
+
+          j.to_json.should == '{"joint":"head","X":123.0,"Y":456.0,"Z":789.0}'
         end
 
         it "should handle kinectable_pipe's format" do
@@ -18,6 +20,7 @@ module BallOfLight
           j.x.should == 123.0
           j.y.should == 456.0
           j.z.should == 789.0
+
         end
 
         it "should decode JSON" do

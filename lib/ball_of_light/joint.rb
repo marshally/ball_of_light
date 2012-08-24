@@ -30,4 +30,17 @@ class Joint
       end
     end
   end
+
+  def as_json
+    {
+      :joint => self.name,
+      :X => self.x,
+      :Y => self.y,
+      :Z => self.z
+    }
+  end
+
+  def to_json
+    as_json.to_json
+  end
 end

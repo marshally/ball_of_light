@@ -1,9 +1,12 @@
 # {"skeletons":[{"userid":0,"joints":[{"joint":"head","X":-184.015,"Y":658.383,"Z":1432.966},{"joint":"neck","X":-157.280,"Y":423.314,"Z":1514.067},{"joint":"neck","X":-157.280,"Y":423.314,"Z":1514.067},{"joint":"l_shoulder","X":-321.373,"Y":390.215,"Z":1559.495},{"joint":"l_elbow","X":-419.761,"Y":258.850,"Z":1335.723},{"joint":"l_elbow","X":-419.761,"Y":258.850,"Z":1335.723},{"joint":"l_hand","X":-516.957,"Y":383.857,"Z":1113.725},{"joint":"l_hand","X":-516.957,"Y":383.857,"Z":1113.725},{"joint":"l_hand","X":-516.957,"Y":383.857,"Z":1113.725},{"joint":"r_shoulder","X":6.814,"Y":456.412,"Z":1468.639},{"joint":"r_elbow","X":-53.036,"Y":237.648,"Z":1357.821},{"joint":"r_elbow","X":-53.036,"Y":237.648,"Z":1357.821},{"joint":"r_hand","X":-301.554,"Y":307.065,"Z":1005.167},{"joint":"r_hand","X":-301.554,"Y":307.065,"Z":1005.167},{"joint":"torso","X":-140.390,"Y":260.839,"Z":1456.696},{"joint":"torso","X":-140.390,"Y":260.839,"Z":1456.696},{"joint":"l_hip","X":-201.483,"Y":82.636,"Z":1420.915},{"joint":"l_knee","X":-203.768,"Y":-279.789,"Z":1426.475},{"joint":"l_knee","X":-203.768,"Y":-279.789,"Z":1426.475},{"joint":"l_foot","X":-155.155,"Y":-667.994,"Z":1562.171},{"joint":"r_hip","X":-45.518,"Y":114.095,"Z":1377.737},{"joint":"r_knee","X":97.158,"Y":-251.251,"Z":1325.707},{"joint":"r_knee","X":97.158,"Y":-251.251,"Z":1325.707},{"joint":"r_foot","X":198.733,"Y":-662.906,"Z":1416.112}]}],"elapsed":3.117}
 # or
 #
+require 'json'
+
 class User
-  attr_accessor :id, :joints
+  attr_accessor :id, :joints, :gestures, :x, :y, :z
   def initialize(options = {})
+    self.gestures = []
     if options[:blob]
       blob = JSON.parse options[:blob]
       options.merge! blob
@@ -13,11 +16,63 @@ class User
     self.id = options[:userid]
     if options[:joints]
       self.joints = options[:joints].inject({}) do |result, j|
-        joint = Joint.new(j)
-        result[joint.name.to_sym] = joint
+        j.symbolize_keys!
+        if j[:joint] || j[:name]
+          joint = Joint.new(j)
+          result[joint.name.to_sym] = joint
+        end
         result
       end
+    else
+      self.joints = []
     end
+
+    if options[:X] && options[:Y] && options[:X]
+      self.x = options[:X]
+      self.y = options[:Y]
+      self.z = options[:Z]
+    end
+  end
+
+  # FIXME
+  # so fugly
+  def joints_as_json
+    unless self.joints.empty?
+      {:joints => self.joints.inject({}){|result, j| result[j.first.to_sym] = j.last.as_json}}
+    else
+      {}
+    end
+  end
+
+  def gestures_as_json
+    unless self.gestures.empty?
+      {:gestures => self.gestures.map{|j| j.as_json}}
+    else
+      {}
+    end
+  end
+
+  def points_as_json
+    if (self.x && self.y && self.z)
+      {
+        :X => self.x,
+        :Y => self.y,
+        :Z => self.z,
+      }
+    else
+      {}
+    end
+  end
+
+  def as_json
+    {
+      :userid => self.id
+    }.merge(joints_as_json).merge(gestures_as_json).merge(points_as_json)
+  end
+
+  # FIXME: this seems unnecessary?!?
+  def to_json
+    as_json.to_json
   end
 
   def pointing

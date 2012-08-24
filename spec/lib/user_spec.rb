@@ -4,6 +4,8 @@ module BallOfLight
   describe User do
     describe ".initialize" do
       context "when passed a blob" do
+        # FIXME
+        # considering to deprecate this format
         it "should serialize the values" do
           u = User.new(:userid => 1, :joints => [{:name => "head", :x => "123", :y => 456.0, :z => 789}])
           u.id.should == 1
@@ -13,6 +15,8 @@ module BallOfLight
           j.x.should == 123.0
           j.y.should == 456.0
           j.z.should == 789.0
+
+          u.to_json.should == "{\"userid\":1,\"joints\":{\"joint\":\"head\",\"X\":123.0,\"Y\":456.0,\"Z\":789.0}}"
         end
 
         it "should handle kinectable_pipe's format" do
@@ -24,6 +28,8 @@ module BallOfLight
           j.x.should == 123.0
           j.y.should == 456.0
           j.z.should == 789.0
+
+          u.to_json.should == "{\"userid\":1,\"joints\":{\"joint\":\"head\",\"X\":123.0,\"Y\":456.0,\"Z\":789.0}}"
         end
 
         it "should decode JSON" do
@@ -34,6 +40,13 @@ module BallOfLight
           j.x.should == 123.0
           j.y.should == 456.0
           j.z.should == 789.0
+        end
+
+        it "should handle bad JSON encoding from kinectable_pipe 0.0.4" do
+
+          u = User.new(:blob => '{"userid":3,"joints":[{"userid":7,"X":595.137,"Y":97.901,"Z":1158.847}]}')
+
+          u.joints.empty?.should == true
         end
       end
     end
