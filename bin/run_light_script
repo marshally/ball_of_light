@@ -83,15 +83,15 @@ while(!$input.closed?)
 
   case count_skeletons(lines.last)
   when 0
-    script = "0.rb"
+    script = ["0.rb", "heartbeat.rb", "factory.rb", "factory.rb", "spiral.rb", "chase.rb"].sample
   when 1
     script = "1.rb"
   when 2
     script = "hug.rb"
   when nil
-    script = ["heartbeat.rb", "factory.rb", "factory.rb", "spiral.rb", "chase.rb"].sample
+    script = ["0.rb", "heartbeat.rb", "factory.rb", "factory.rb", "spiral.rb", "chase.rb"].sample
   else
-    script = "heartbeat.rb"
+    script = ["1.rb", "factory.rb"].sample
   end
 
   run script
