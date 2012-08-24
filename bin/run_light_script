@@ -35,6 +35,9 @@ end
 $input.sync = true
 $stdout.sync = true
 
+File.delete("stderr.log")
+File.delete("stdout.log")
+
 def run(script)
   puts "running #{script}"
   cmd = "ruby #{BASEDIR}../scripts/#{script} 2>>stderr.log >>stdout.log"
