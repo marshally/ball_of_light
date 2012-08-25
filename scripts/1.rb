@@ -61,15 +61,15 @@ reset_colors(controller)
 
 def light_vectors
   @light_vectors = {
-    1 => Vector[-1,0,-1].normalize,
-    2 => Vector[1,0,-1].normalize,
-    3 => Vector[1,0,1].normalize,
-    4 => Vector[-1,0,1].normalize,
+    0 => Vector[-1,0,-1].normalize,
+    1 => Vector[1,0,-1].normalize,
+    2 => Vector[1,0,1].normalize,
+    3 => Vector[-1,0,1].normalize,
 
-    5 => Vector[0,0,-1].normalize,
-    6 => Vector[1,0,0].normalize,
-    7 => Vector[0,0,1].normalize,
-    8 => Vector[-1,0,0].normalize
+    4 => Vector[0,0,-1].normalize,
+    5 => Vector[1,0,0].normalize,
+    6 => Vector[0,0,1].normalize,
+    7 => Vector[-1,0,0].normalize
   }
 end
 
