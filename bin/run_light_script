@@ -85,18 +85,19 @@ while(!$input.closed?)
     line.nil? || !line.include?("skeletons")
   end
 
-  case count_skeletons(lines.last)
+  case count = count_skeletons(lines.last)
   when 0
-    script = ["0.rb", "heartbeat.rb", "factory.rb", "factory.rb", "spiral.rb", "chase.rb"].sample
+    script = ["0.rb", "heartbeat.rb", "factory.rb", "factory.rb", "spiral.rb", "chase.rb", "clock.rb"].sample
   when 1
     script = "1.rb"
   when 2
-    script = "hug.rb"
+    script = ["1.rb", "hug.rb", "factory.rb"].sample
   when nil
-    script = ["0.rb", "heartbeat.rb", "factory.rb", "factory.rb", "spiral.rb", "chase.rb"].sample
+    script = ["0.rb", "heartbeat.rb", "factory.rb", "factory.rb", "spiral.rb", "chase.rb", "clock.rb"].sample
   else
     script = ["1.rb", "factory.rb"].sample
   end
+  puts "found #{count} skeletons"
 
   run script
   sleep(0.1)
