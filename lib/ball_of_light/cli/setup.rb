@@ -5,6 +5,25 @@ module BallOfLight
     class Setup < Thor
       include Thor::Actions
 
+      desc "dependencies", "checks to see if correct dependencies are installed"
+      method_option :install, :aliases => "-i", :desc => "install missing dependencies"
+      def dependencies
+        brews = %w(rbenv ruby-build kinectable_pipe aubio open-lighting)
+
+        installed = `brew list`
+        not_installed = []
+        brews.each do |brew|
+          unless installed.include? brew
+            not_installed << brew
+            say "#{brew} is not installed"
+          end
+        end
+
+        if options[:install]
+          not_installed.each {|b| run "brew install #{b}"}
+        end
+      end
+
       desc "link", "symlinks executeable to /usr/local/bin"
       def link
         # TODO: find out why remove_file doesn't work here. grrrrr
