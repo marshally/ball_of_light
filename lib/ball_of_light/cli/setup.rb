@@ -65,6 +65,20 @@ module BallOfLight
         say "Add the DMX USB Pro output port to it"
       end
 
+      desc "java", "setup java"
+      def java
+        if `java -versions`.include? "java version"
+          jrubyver = "jruby-1.6.5"
+          unless `rbenv versions`.include? jruby_version
+            run "rbenv install #{jruby_version}; rbenv rehash"
+          end
+          run "RBENV_VERSION=#{jruby_version} gem install ruby-processing"
+          run "rbenv rehash"
+        else
+          say "look for a java runtime installer version and accept the dialog"
+        end
+      end
+
       no_tasks do
         def usb_devices
           @usb_devices ||= Dir["/dev/cu.usb*"]
