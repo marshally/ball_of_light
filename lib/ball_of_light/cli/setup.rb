@@ -8,7 +8,7 @@ module BallOfLight
       desc "dependencies", "checks to see if correct dependencies are installed"
       method_option :install, :aliases => "-i", :desc => "install missing dependencies"
       def dependencies
-        brews = %w(rbenv ruby-build kinectable_pipe aubio open-lighting)
+        brews = %w(rbenv ruby-build kinectable_pipe aubio open-lighting sox)
 
         installed = `brew list`
         not_installed = []
@@ -85,18 +85,16 @@ module BallOfLight
       end
 
       desc "java", "setup java"
-      def java
+      def java(jruby_version="jruby-1.6.6")
         if Open3.capture2e("java -version").first.include? "java version"
-          jruby_version = "jruby-1.6.6"
           unless `rbenv versions`.include? jruby_version
-            run "rbenv install #{jruby_version}; rbenv rehash"
+            say "Please run the following commands:\n"
+            say "rbenv install #{jruby_version}"
           else
             say "jruby already installed"
           end
-          say "Please run the following commands:\n"
-          # say "\tRBENV_VERSION=#{jruby_version} gem list"
+          say "\nPlease run the following commands:\n"
           say "RBENV_VERSION=#{jruby_version} gem install ruby-processing"
-          # say "\tRBENV_VERSION=#{jruby_version} gem list"
           say "rbenv rehash"
         else
           say "look for a java runtime installer version and accept the dialog"
