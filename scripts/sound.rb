@@ -2,6 +2,7 @@
 require 'bundler'
 Bundler.setup
 
+# NOTE: best song is Daft Punk, Burnin' / Too Long
 require_relative '../lib/ball_of_light'
 
 # This script is for:
@@ -22,7 +23,7 @@ $stdout.sync = true
 puts "lets get em"
 
 last_beat = Time.now - 10
-points = [:bottom, :center, :left, :right, :front, :back]
+points = [:center, :left, :right, :front, :back]
 pans = [0,255]
 while(1)
 
@@ -39,7 +40,12 @@ while(1)
     controller.buffer(:point => controller.random_color)
     # everyone gets a different random point
     controller.devices.each do |device|
+#      device.buffer(:point => points.rotate!.first)
       device.buffer(:point => points.sample)
+      # else
+      #   controller.animate!(:seconds => 1, :tilt => rand(255).to_i)
+      #   controller.animate!(:seconds => 2, :pan => pans.sample)
+      # end
     end
     controller.write!
     $stdout.puts "read! #{got_a_beat}"
@@ -47,9 +53,9 @@ while(1)
     $stdout.puts "no beat, lets shuffle #{pans.last}"
     # let's spend 10.5 seconds doing the factory routine
     controller.buffer(:point => controller.random_color)
-    controller.animate!(:seconds => 0.5, :tilt => rand(255).to_i)
+    controller.animate!(:seconds => 1, :tilt => rand(255).to_i)
     controller.buffer(:point => controller.random_color)
-    controller.animate!(:seconds => 1, :pan => pans.rotate!.first)
+    controller.animate!(:seconds => 2, :pan => pans.rotate!.first)
   else
     sleep(0.05)
   end
