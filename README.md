@@ -28,7 +28,6 @@ Bundler.setup
 # setup controller
 controller = BallOfLight::BallOfLightController.new(options)
 
-
 # Section Goal: Point toward the center for 30 seconds.
 
 
