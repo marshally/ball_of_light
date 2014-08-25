@@ -30,6 +30,10 @@ controller = BallOfLight::BallOfLightController.new(options)
 
 # Section Goal: Point toward the center for 30 seconds.
 
+
+
+
+
 # This command turns the all of the lights on
 controller.on!
 
@@ -76,5 +80,6 @@ puts controller.points
 
 # For example, :center is the same as {:pan => 127, :tilt => 127}
 ```
+
 
 
