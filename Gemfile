@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rake',          '~> 0.8.7'
+gem 'rake',          '~> 12.3.3'
 platforms :ruby do
   gem 'thor',          '~> 0.15.4'
   gem 'json',          '~> 1.7.3'
